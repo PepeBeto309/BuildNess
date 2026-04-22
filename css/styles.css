@@ -59,6 +59,10 @@ grid-template-rows:70px 1fr;
 
 height:100vh;
 
+<<<<<<< HEAD
+=======
+overflow:hidden;
+>>>>>>> 7efe7dcb1973ea1dda36215cb1696641585e482b
 }
 
 /* ======================
@@ -562,6 +566,11 @@ border:1px solid var(--border);
 
 border-radius:6px;
 
+<<<<<<< HEAD
+=======
+overflow:hidden;
+
+>>>>>>> 7efe7dcb1973ea1dda36215cb1696641585e482b
 box-shadow:var(--shadow);
 }
 
@@ -816,5 +825,9 @@ border-radius:6px;
 .st-cotizado{background:var(--bg-cotizado);color:var(--st-cotizado);}
 .st-pendiente{background:var(--bg-pendiente);color:var(--st-pendiente);}
 .st-terminado{background:var(--bg-completado);color:var(--st-completado);}
+<<<<<<< HEAD
 .st-cancelado{background:var(--bg-cancelado);color:var(--st-cancelado);}
 
+=======
+.st-cancelado{background:var(--bg-cancelado);color:var(--st-cancelado);}
+>>>>>>> 7efe7dcb1973ea1dda36215cb1696641585e482b
