@@ -52,7 +52,6 @@
     </header>
 
 
-    <!-- SIDEBAR (igual que index) -->
     <!-- SIDEBAR -->
 
     <aside id="sidebar">
@@ -60,92 +59,62 @@
         <div class="nav-section">GENERAL</div>
 
         <div class="menu-item">
-            <a href="index.html" class="menu-btn active">
+            <a href="index.html" class="menu-btn">
                 <span><i class="fa-solid fa-gauge-high"></i> Dashboard</span>
             </a>
         </div>
 
         <div class="menu-item">
-
             <input type="checkbox" id="desempeño" class="menu-check">
-
             <label for="desempeño" class="menu-btn">
                 <span><i class="fa-solid fa-chart-line"></i> Desempeño</span>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </label>
-
             <ul class="submenu">
                 <li><a href="#">KPIs Personal</a></li>
                 <li><a href="#">Eficiencia Taller</a></li>
             </ul>
-
         </div>
-
 
         <div class="nav-section">OPERACIONES</div>
 
         <div class="menu-item">
-
             <input type="checkbox" id="inventario" class="menu-check">
-
             <label for="inventario" class="menu-btn">
                 <span><i class="fa-solid fa-box"></i> Inventario</span>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </label>
-
             <ul class="submenu">
-                <li><a href="#">Stock de Refacciones</a></li>
-                <li><a href="#">Entradas/Salidas</a></li>
-            </ul>
-
-        </div>
-
-        <div clss="menu-item">
-            <input type="checkbox" id="cuponera" class="menu-check">
-
-            <label for="cuponera" class="menu-btn">
-                <span><i class="fa-solid fa-ticket"></i> Cuponera</span>
-                <i class="fa-solid fa-chevron-right chevron"></i>
-            </label>
-            <ul class="submenu">
-                <li><a href="#">Promociones vigentes</a></li>
-                <li><a href="#">Historial de Canjes</a></li>
+                <li><a href="mostrar_Inventario.php">Stock de Refacciones</a></li>
+                <li><a href="entradas_salidas.php">Entradas/Salidas</a></li>
             </ul>
         </div>
 
-        <div clss="menu-item">
-            <input type="checkbox" id="clientes" class="menu-check">
-
+        <div class="menu-item">
+            <input type="checkbox" id="clientes" class="menu-check" checked>
             <label for="clientes" class="menu-btn">
                 <span><i class="fa-solid fa-address-book"></i> Clientes</span>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </label>
             <ul class="submenu">
                 <li><a href="nuevo_cliente.html">Nuevo Cliente</a></li>
-                <li><a href="#">Directorio de Clientes</a></li>
-                <li><a href="#">Directorio de Vehiculos</a></li>
+                <li><a href="mostrar_clientes.php">Directorio de Clientes</a></li>
+                <li><a href="mostrar_vehiculos.php">Directorio de Vehiculos</a></li>
             </ul>
         </div>
 
-
         <div class="menu-item">
-
             <input type="checkbox" id="ordenes" class="menu-check">
-
             <label for="ordenes" class="menu-btn">
                 <span><i class="fa-solid fa-car"></i> Ordenes de Trabajo</span>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </label>
-
             <ul class="submenu">
                 <li><a href="nueva_orden.html">Nueva orden</a></li>
                 <li><a href="#">Seguimiento de orden</a></li>
                 <li><a href="#">Historial</a></li>
             </ul>
-
         </div>
-
-        <!-- ADMINISTRACIÓN -->
 
         <div class="nav-section">ADMINISTRACIÓN</div>
 
@@ -160,7 +129,6 @@
             </ul>
         </div>
 
-
         <div class="menu-item">
             <input type="checkbox" id="m-fin" class="menu-check">
             <label for="m-fin" class="menu-btn">
@@ -173,7 +141,6 @@
             </ul>
         </div>
 
-
         <div class="menu-item">
             <input type="checkbox" id="m-gas" class="menu-check">
             <label for="m-gas" class="menu-btn">
@@ -183,15 +150,6 @@
             <ul class="submenu">
                 <li><a href="#">Proveedores</a></li>
             </ul>
-        </div>
-
-
-        <div class="nav-section">CONFIGURACIÓN</div>
-
-        <div class="menu-item">
-            <a class="menu-btn">
-                <span><i class="fa-solid fa-gear"></i> Ajustes del Sistema</span>
-            </a>
         </div>
 
     </aside>
@@ -205,7 +163,7 @@
                 Nuevo Cliente
             </div>
 
-            <form>
+            <form name="formClientes" id="formClientes" method="post" action="php/clientes.php" novalidate>
 
                 <div class="form-grid">
 
@@ -214,18 +172,28 @@
                         <h3>Datos del Cliente</h3>
 
                         <div class="input-group">
-                            <label>Nombre</label>
-                            <input type="text">
+                            <label>Nombres</label>
+                            <input type="text" name="nombres" id="nombres" required autocomplete="given-name">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Apellido Paterno</label>
+                            <input type="text" name="apPat" id="apPat" required autocomplete="family-name">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Apellido Materno</label>
+                            <input type="text" name="apMat" id="apMat" required autocomplete="additional-name">
                         </div>
 
                         <div class="input-group">
                             <label>Teléfono</label>
-                            <input type="tel">
+                            <input type="tel" name="tel" id="tel" required placeholder="5512345678">
                         </div>
 
                         <div class="input-group">
                             <label>Email</label>
-                            <input type="email">
+                            <input type="email" name="email" id="email" required autocomplete="email">
                         </div>
 
                     </div>
@@ -237,27 +205,27 @@
 
                         <div class="input-group">
                             <label>Marca</label>
-                            <input type="text">
+                            <input type="text" name="marca" id="marca">
                         </div>
 
                         <div class="input-group">
                             <label>Modelo</label>
-                            <input type="text">
+                            <input type="text" name="modelo" id="modelo">
                         </div>
 
                         <div class="input-group">
                             <label>Año</label>
-                            <input type="number">
+                            <input type="number" name="año" id="año">
                         </div>
 
                         <div class="input-group">
                             <label>Placa</label>
-                            <input type="text">
+                            <input type="text" name="placa" id="placa" required maxlength="10" placeholder="ABC1234">
                         </div>
 
                         <div class="input-group">
                             <label>VIN</label>
-                            <input type="text">
+                            <input type="text" name="VIN" id="VIN" required maxlength="17" placeholder="17 caracteres">
                         </div>
 
                     </div>
@@ -266,11 +234,9 @@
 
                 <div class="form-actions">
 
-                    <button class="btn btn-primary">
-                        Guardar
-                    </button>
+                    <input type="submit" value="Guardar" name="Guardar">
 
-                    <button class="btn">
+                    <button type="button" class="btn">
                         Editar
                     </button>
 
@@ -282,6 +248,7 @@
 
     </main>
 
+    <script src="js/validacion_cliente.js"></script>
 </body>
 
 </html>

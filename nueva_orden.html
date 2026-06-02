@@ -58,92 +58,62 @@
         <div class="nav-section">GENERAL</div>
 
         <div class="menu-item">
-            <a href="index.html" class="menu-btn active">
+            <a href="index.html" class="menu-btn">
                 <span><i class="fa-solid fa-gauge-high"></i> Dashboard</span>
             </a>
         </div>
 
         <div class="menu-item">
-
             <input type="checkbox" id="desempeño" class="menu-check">
-
             <label for="desempeño" class="menu-btn">
                 <span><i class="fa-solid fa-chart-line"></i> Desempeño</span>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </label>
-
             <ul class="submenu">
                 <li><a href="#">KPIs Personal</a></li>
                 <li><a href="#">Eficiencia Taller</a></li>
             </ul>
-
         </div>
-
 
         <div class="nav-section">OPERACIONES</div>
 
         <div class="menu-item">
-
             <input type="checkbox" id="inventario" class="menu-check">
-
             <label for="inventario" class="menu-btn">
                 <span><i class="fa-solid fa-box"></i> Inventario</span>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </label>
-
             <ul class="submenu">
-                <li><a href="#">Stock de Refacciones</a></li>
-                <li><a href="#">Entradas/Salidas</a></li>
-            </ul>
-
-        </div>
-
-        <div clss="menu-item">
-            <input type="checkbox" id="cuponera" class="menu-check">
-
-            <label for="cuponera" class="menu-btn">
-                <span><i class="fa-solid fa-ticket"></i> Cuponera</span>
-                <i class="fa-solid fa-chevron-right chevron"></i>
-            </label>
-            <ul class="submenu">
-                <li><a href="#">Promociones vigentes</a></li>
-                <li><a href="#">Historial de Canjes</a></li>
+                <li><a href="mostrar_Inventario.php">Stock de Refacciones</a></li>
+                <li><a href="entradas_salidas.php">Entradas/Salidas</a></li>
             </ul>
         </div>
 
-        <div clss="menu-item">
+        <div class="menu-item">
             <input type="checkbox" id="clientes" class="menu-check">
-
             <label for="clientes" class="menu-btn">
                 <span><i class="fa-solid fa-address-book"></i> Clientes</span>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </label>
             <ul class="submenu">
                 <li><a href="nuevo_cliente.html">Nuevo Cliente</a></li>
-                <li><a href="#">Directorio de Clientes</a></li>
-                <li><a href="#">Directorio de Vehiculos</a></li>
+                <li><a href="mostrar_clientes.php">Directorio de Clientes</a></li>
+                <li><a href="mostrar_vehiculos.php">Directorio de Vehiculos</a></li>
             </ul>
         </div>
 
-
         <div class="menu-item">
-
-            <input type="checkbox" id="ordenes" class="menu-check">
-
+            <input type="checkbox" id="ordenes" class="menu-check" checked>
             <label for="ordenes" class="menu-btn">
                 <span><i class="fa-solid fa-car"></i> Ordenes de Trabajo</span>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </label>
-
             <ul class="submenu">
                 <li><a href="nueva_orden.html">Nueva orden</a></li>
                 <li><a href="#">Seguimiento de orden</a></li>
                 <li><a href="#">Historial</a></li>
             </ul>
-
         </div>
-
-        <!-- ADMINISTRACIÓN -->
 
         <div class="nav-section">ADMINISTRACIÓN</div>
 
@@ -158,7 +128,6 @@
             </ul>
         </div>
 
-
         <div class="menu-item">
             <input type="checkbox" id="m-fin" class="menu-check">
             <label for="m-fin" class="menu-btn">
@@ -171,7 +140,6 @@
             </ul>
         </div>
 
-
         <div class="menu-item">
             <input type="checkbox" id="m-gas" class="menu-check">
             <label for="m-gas" class="menu-btn">
@@ -181,15 +149,6 @@
             <ul class="submenu">
                 <li><a href="#">Proveedores</a></li>
             </ul>
-        </div>
-
-
-        <div class="nav-section">CONFIGURACIÓN</div>
-
-        <div class="menu-item">
-            <a class="menu-btn">
-                <span><i class="fa-solid fa-gear"></i> Ajustes del Sistema</span>
-            </a>
         </div>
 
     </aside>
