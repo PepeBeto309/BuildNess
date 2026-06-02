@@ -1,0 +1,260 @@
+/* Estilos específicos para el Header */
+.titulo-principal {
+    font-size: 3rem;
+    text-transform: uppercase;
+    margin-top: 2rem;
+    font-family: 'Cinzel', serif;
+}
+
+/* Estilos específicos para la sección Hero (Main) */
+.subtitulo-hero {
+    font-size: 1.8rem;
+    font-family: 'Cinzel', serif;
+    color: var(--color-fuente); /* Aseguramos que use la variable del tema */
+}
+
+.descripcion-hero {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.boton-cta {
+    display: inline-block;
+    padding: 10px 25px;
+    border: 1px solid var(--color-fuente);
+    text-decoration: none;
+    color: var(--color-fuente);
+    transition: all 0.3s ease;
+}
+
+.boton-cta:hover {
+    background-color: var(--color-fuente);
+    color: var(--color-fondo);
+}
+
+/* --- Inventario (mostrar_Inventario.php) --- */
+.inventario-main {
+    grid-area: content;
+    padding: 1.5rem 2rem;
+    overflow: auto;
+}
+
+.inventario-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.inventario-toolbar h2 {
+    flex: 1 1 auto;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.btn-inventario {
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-inventario:hover {
+    background: var(--accent-soft);
+    border-color: var(--primary);
+}
+
+.btn-inventario--primary {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+}
+
+.btn-inventario--primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.inventario-alerta {
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.inventario-alerta--ok {
+    background: var(--bg-completado);
+    color: var(--st-completado);
+    border: 1px solid #96d4a8;
+}
+
+.inventario-alerta--error {
+    background: var(--bg-cancelado);
+    color: var(--st-cancelado);
+    border: 1px solid #f0b4b8;
+}
+
+.modal-inventario {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
+.modal-inventario.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-inventario__panel {
+    width: 100%;
+    max-width: 420px;
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-inventario__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-inventario__head h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.modal-inventario__cerrar {
+    border: none;
+    background: transparent;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--text-sub);
+    line-height: 1;
+    padding: 0.25rem;
+}
+
+.modal-inventario__cerrar:hover {
+    color: var(--text-main);
+}
+
+.modal-inventario .campo {
+    margin-bottom: 0.9rem;
+}
+
+.modal-inventario .campo label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-sub);
+    margin-bottom: 0.35rem;
+}
+
+.modal-inventario .campo-requerido {
+    color: var(--st-cancelado);
+}
+
+.modal-inventario .campo input {
+    width: 100%;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.modal-inventario .campo input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.modal-inventario__acciones {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
+}
+
+.inventario-tabla-vacio {
+    text-align: center;
+    color: var(--text-sub);
+    padding: 2rem;
+}
+
+.inventario-ayuda {
+    font-size: 0.85rem;
+    color: var(--text-sub);
+    margin: -0.5rem 0 1rem;
+}
+
+.fila-inventario {
+    cursor: pointer;
+}
+
+.fila-inventario:hover {
+    background: var(--accent-soft);
+}
+
+.fila-inventario--seleccionada {
+    background: var(--accent-soft) !important;
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+.btn-inventario:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.btn-inventario:disabled:hover {
+    background: var(--white);
+    border-color: var(--border);
+}
+
+a.btn-inventario {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.movimientos-seccion {
+    margin-bottom: 2rem;
+}
+
+.movimientos-titulo {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.movimientos-titulo--entrada {
+    color: var(--st-completado);
+}
+
+.movimientos-titulo--salida {
+    color: var(--st-cancelado);
+}
