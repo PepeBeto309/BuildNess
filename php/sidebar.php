@@ -135,7 +135,7 @@ $act_ord_historial       = act_sub($sidebar_activo, 'ordenes_historial');
                 </a>
             </li>
             <li>
-                <a href="#" class="<?php echo $act_ord_historial; ?>">
+                <a href="historial.php" class="<?php echo $act_ord_historial; ?>">
                     <i class="fa-solid fa-clock-rotate-left" style="width:14px;margin-right:4px;"></i>
                     Historial
                 </a>

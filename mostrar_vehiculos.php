@@ -38,7 +38,7 @@ $consulta = obtener_vehiculos();
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
+    <script src="js/theme.js"></script>
 </head>
 
 <body>
@@ -60,7 +60,9 @@ $consulta = obtener_vehiculos();
         </div>
 
         <div class="header-right">
-
+            <button id="theme-toggle" aria-label="Cambiar tema">
+                <i class="fa-regular fa-moon"></i>
+            </button>
             <div class="tool-icons">
                 <i class="fa-regular fa-note-sticky"></i>
                 <i class="fa-solid fa-triangle-exclamation">

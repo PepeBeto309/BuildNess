@@ -122,6 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>BuildNess - ERP+CRM</title>
+    <script src="js/theme.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -268,12 +270,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 <a class="font-['Manrope'] font-bold tracking-tight text-sm text-slate-600 dark:text-slate-400 hover:text-blue-800 transition-colors hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-lg py-1 px-3" href="#precios">Precios</a>
                 <a class="font-['Manrope'] font-bold tracking-tight text-sm text-slate-600 dark:text-slate-400 hover:text-blue-800 transition-colors hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-lg py-1 px-3" href="#nosotros">Nosotros</a>
             </div>
-            <button id="open-login-btn-nav" class="btn-primary px-6 py-2 font-label font-semibold text-sm hidden md:block">
-                <div>Iniciar Sesión</div>
-            </button>
-            <button id="open-login-btn-mobile" class="md:hidden text-primary">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-lg transition-colors flex items-center justify-center" aria-label="Cambiar tema" style="width: 36px; height: 36px;">
+                </button>
+                <button id="open-login-btn-nav" class="btn-primary px-6 py-2 font-label font-semibold text-sm hidden md:block">
+                    <div>Iniciar Sesión</div>
+                </button>
+                <button id="open-login-btn-mobile" class="md:hidden text-primary">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+            </div>
         </div>
     </nav>
 

@@ -18,7 +18,7 @@ requerir_autenticacion();
         rel="stylesheet">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
+    <script src="js/theme.js"></script>
 </head>
 
 <body>
@@ -42,7 +42,9 @@ requerir_autenticacion();
         </div>
 
         <div class="header-right">
-
+            <button id="theme-toggle" aria-label="Cambiar tema">
+                <i class="fa-regular fa-moon"></i>
+            </button>
             <div class="tool-icons">
 
                 <i class="fa-regular fa-note-sticky"></i>

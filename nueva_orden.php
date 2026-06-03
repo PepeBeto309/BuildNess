@@ -12,6 +12,7 @@ requerir_autenticacion();
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="js/theme.js"></script>
 
     <style>
         /* ── Buscador de cliente ───────────────────────────────────── */
@@ -346,6 +347,9 @@ requerir_autenticacion();
         </div>
 
         <div class="header-right">
+            <button id="theme-toggle" aria-label="Cambiar tema">
+                <i class="fa-regular fa-moon"></i>
+            </button>
             <div class="tool-icons">
                 <i class="fa-regular fa-note-sticky"></i>
                 <i class="fa-solid fa-triangle-exclamation">
@@ -551,6 +555,17 @@ requerir_autenticacion();
 
                         <!-- Separador -->
                         <div class="btn-ot-separator" style="margin:16px 0;"></div>
+
+                        <!-- ── Órdenes activas de este vehículo ──────── -->
+                        <div id="ot-activas-section" style="display:none; margin-bottom:14px;">
+                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:8px;">
+                                <i class="fa-solid fa-file-circle-check" style="margin-right:5px;color:var(--st-pendiente);"></i>
+                                Órdenes activas de este vehículo
+                            </div>
+                            <div id="ot-activas-list"></div>
+                        </div>
+                        <!-- Separador 2 -->
+                        <div id="ot-activas-sep" class="btn-ot-separator" style="margin:0 0 12px 0; display:none;"></div>
 
                         <!-- Acciones OT -->
                         <div class="ot-actions">
@@ -797,7 +812,67 @@ requerir_autenticacion();
 
                 vehiculoList.appendChild(label);
             });
+
+            // Auto-load OTs for first vehicle
+            if (vehiculos.length > 0) {
+                cargarOTActivas(vehiculos[0].Clave_Vehiculo);
+            }
         }
+
+        // ── Cargar OTs activas por vehículo ───────────────────────────
+        function cargarOTActivas(claveVehiculo) {
+            const section  = document.getElementById('ot-activas-section');
+            const sep      = document.getElementById('ot-activas-sep');
+            const list     = document.getElementById('ot-activas-list');
+
+            list.innerHTML = '<span class="vehiculos-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> Buscando órdenes activas…</span>';
+            section.style.display = 'block';
+            sep.style.display = 'block';
+
+            fetch('php/ot_activas_vehiculo.php?clave=' + encodeURIComponent(claveVehiculo))
+                .then(r => r.json())
+                .then(ots => {
+                    if (ots.length === 0) {
+                        section.style.display = 'none';
+                        sep.style.display = 'none';
+                        return;
+                    }
+                    list.innerHTML = '';
+                    ots.forEach(ot => {
+                        const estadoClass = {
+                            'NUEVO':      'st-nuevo',
+                            'PENDIENTE':  'st-pendiente',
+                            'COTIZACION': 'st-cotizado',
+                            'EN PROGRESO':'st-pendiente'
+                        }[ot.Estado] || 'st-cotizado';
+
+                        const card = document.createElement('div');
+                        card.style.cssText = 'padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;background:var(--bg-base);';
+                        card.innerHTML = `
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-size:12px;font-weight:700;color:var(--text-primary);">${escapeHtml(ot.OT_Num)}</span>
+                                <span class="status ${estadoClass}">${escapeHtml(ot.Estado)}</span>
+                            </div>
+                            <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">
+                                ${escapeHtml(ot.Fecha)}
+                                ${ot.Trabajo_Realizado ? ' · ' + escapeHtml(ot.Trabajo_Realizado.substring(0,50)) + (ot.Trabajo_Realizado.length > 50 ? '…' : '') : ''}
+                            </div>`;
+                        list.appendChild(card);
+                    });
+                })
+                .catch(() => {
+                    section.style.display = 'none';
+                    sep.style.display = 'none';
+                });
+        }
+
+        // Actualizar OTs cuando cambia el vehículo seleccionado
+        document.addEventListener('change', e => {
+            if (e.target && e.target.name === 'clave_vehiculo_radio') {
+                const clave = e.target.value;
+                if (clave) cargarOTActivas(clave);
+            }
+        });
 
         // ── Validación antes de enviar ─────────────────────────────────
         document.getElementById('ot-form').addEventListener('submit', e => {
