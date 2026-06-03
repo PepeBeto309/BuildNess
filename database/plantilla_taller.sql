@@ -237,3 +237,35 @@ CREATE TABLE Gastos_Variables (
         FOREIGN KEY (OT_Num) REFERENCES OT(OT_Num)
         ON UPDATE CASCADE ON DELETE SET NULL
 );
+
+-- =============================================
+-- USUARIOS
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS Usuarios (
+  id_usuario    INT           NOT NULL AUTO_INCREMENT,
+  nombre        VARCHAR(100)  NOT NULL,
+  email         VARCHAR(100)  NOT NULL,
+  password      VARCHAR(255)  NOT NULL,
+  rol           ENUM('administrador', 'usuario') NOT NULL DEFAULT 'usuario',
+  activo        BOOLEAN       NOT NULL DEFAULT TRUE,
+  fecha_alta    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  fecha_baja    DATETIME      NULL,
+  PRIMARY KEY (id_usuario),
+  UNIQUE KEY uq_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =============================================
+-- ADMINISTRADOR POR DEFECTO
+-- Contraseña: Admin2025* (Sin encriptar)
+-- ¡Cambiar en el primer login!
+-- =============================================
+
+INSERT INTO Usuarios (nombre, email, password, rol)
+SELECT 'Administrador', 'admin@taller.com',
+       'Admin2025*',
+       'administrador'
+WHERE NOT EXISTS (
+  SELECT 1 FROM Usuarios WHERE rol = 'administrador'
+);
+
