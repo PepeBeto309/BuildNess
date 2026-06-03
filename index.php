@@ -410,93 +410,194 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 <div class="pricing-slider-container">
                     <!-- Slider Track -->
                     <div id="pricing-slider-track" class="pricing-slider-track select-none" style="cursor: grab;">
-                        
+
                         <!-- Slide 1: Suscripción -->
                         <div class="pricing-slide flex flex-col">
-                            <div class="w-full max-w-md mx-auto bg-surface-container-lowest p-8 rounded-xl ambient-shadow border border-outline-variant/20 flex flex-col h-full hover:scale-[1.02] hover:shadow-lg transition-all duration-300">
-                                <h3 class="font-headline text-xl font-bold text-secondary mb-2">Suscripción</h3>
-                                <div class="mb-6">
-                                    <span class="font-headline text-4xl font-extrabold text-on-surface">Desde $299</span>
-                                    <span class="font-body text-secondary">/mes</span>
+                            <div class="w-full max-w-lg mx-auto flex flex-col h-full" style="background:#fff;border-radius:1.5rem;box-shadow:0 8px 40px rgba(0,50,138,.10);border:1.5px solid #e5eaf5;overflow:hidden;">
+                                <!-- Card Header -->
+                                <div style="padding:2rem 2rem 1.25rem;background:linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 100%);border-bottom:1px solid #dbe3fa;">
+                                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
+                                        <div style="width:2.75rem;height:2.75rem;border-radius:.875rem;background:linear-gradient(135deg,#00328a,#2156ca);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(0,50,138,.25);">
+                                            <span class="material-symbols-outlined" style="color:#fff;font-size:1.25rem;font-variation-settings:'FILL' 1;">calendar_month</span>
+                                        </div>
+                                        <div>
+                                            <span style="display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2156ca;background:#dbe1ff;border-radius:999px;padding:.2rem .75rem;margin-bottom:.2rem;">Plan Flexible</span>
+                                            <h3 class="font-headline" style="font-size:1.25rem;font-weight:800;color:#00328a;margin:0;">Suscripción</h3>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex;align-items:baseline;gap:.4rem;">
+                                        <span class="font-headline" style="font-size:3rem;font-weight:900;color:#00328a;line-height:1;">$299</span>
+                                        <span class="font-body" style="font-size:.9rem;color:#515f74;">/mes</span>
+                                    </div>
+                                    <p class="font-body" style="font-size:.8rem;color:#515f74;margin-top:.5rem;">¡2 meses gratis en plan anual! Sin permanencia forzada.</p>
                                 </div>
-                                <p class="font-body text-sm text-secondary mb-8">Paga mensual o anualmente (¡2 meses gratis en plan anual!).</p>
-                                <ul class="space-y-4 mb-8 flex-1">
-                                    <li class="flex items-center gap-3 font-body text-sm">
-                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                                        ERP Solo: $299/mes
-                                    </li>
-                                    <li class="flex items-center gap-3 font-body text-sm">
-                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                                        ERP + CRM: $499/mes
-                                    </li>
-                                    <li class="flex items-center gap-3 font-body text-sm">
-                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                                        Soporte 24/7 en español
-                                    </li>
-                                </ul>
-                                <button class="w-full py-3 rounded-md font-label font-semibold text-primary border border-primary hover:bg-primary-fixed transition-colors btn-pricing-trigger">
-                                    Elegir Plan
-                                </button>
+                                <!-- Card Body -->
+                                <div style="padding:1.5rem 2rem 2rem;flex:1;display:flex;flex-direction:column;">
+                                    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.875rem;flex:1;">
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;"><strong>ERP Solo</strong> — $299/mes</span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;"><strong>ERP + CRM</strong> — $499/mes</span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;">Soporte <strong>24/7</strong> en español</span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;">Actualizaciones automáticas incluidas</span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;">Cancela cuando quieras</span>
+                                        </li>
+                                    </ul>
+                                    <button class="btn-pricing-trigger" style="width:100%;padding:.875rem;border-radius:.75rem;font-weight:700;font-size:.9rem;border:2px solid #00328a;color:#00328a;background:transparent;cursor:pointer;transition:all .2s ease;letter-spacing:.01em;" onmouseover="this.style.background='#00328a';this.style.color='#fff';" onmouseout="this.style.background='transparent';this.style.color='#00328a';">
+                                        Comenzar con Suscripción →
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Slide 2: Licencia Vitalicia -->
                         <div class="pricing-slide flex flex-col">
-                            <div class="w-full max-w-md mx-auto bg-primary p-8 rounded-xl ambient-shadow relative overflow-hidden flex flex-col text-on-primary h-full hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 shadow-xl z-10">
-                                <div class="absolute top-0 right-0 bg-tertiary text-on-tertiary text-xs font-bold px-3 py-1 rounded-bl-lg">
-                                    MÁS POPULAR
+                            <div class="w-full max-w-lg mx-auto flex flex-col h-full" style="background:linear-gradient(145deg,#00328a 0%,#0047bb 60%,#1a5cd9 100%);border-radius:1.5rem;box-shadow:0 20px 60px rgba(0,50,138,.35),0 0 0 1px rgba(255,255,255,.08);overflow:hidden;position:relative;">
+                                <!-- Orbs decorativos -->
+                                <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);top:-60px;right:-60px;pointer-events:none;"></div>
+                                <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(133,248,196,.08);bottom:80px;left:-40px;pointer-events:none;"></div>
+                                <!-- Badge popular -->
+                                <div style="position:absolute;top:1.25rem;right:1.25rem;background:linear-gradient(135deg,#00422c,#005c3f);color:#85f8c4;font-size:.65rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .9rem;border-radius:999px;display:flex;align-items:center;gap:.3rem;">
+                                    <span class="material-symbols-outlined" style="font-size:.8rem;font-variation-settings:'FILL' 1;">star</span>
+                                    Más Popular
                                 </div>
-                                <h3 class="font-headline text-xl font-bold text-primary-fixed mb-2">Licencia Vitalicia</h3>
-                                <div class="mb-6">
-                                    <span class="font-headline text-4xl font-extrabold text-on-primary">Pago Único</span>
+                                <!-- Card Header -->
+                                <div style="padding:2rem 2rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.12);">
+                                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
+                                        <div style="width:2.75rem;height:2.75rem;border-radius:.875rem;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);">
+                                            <span class="material-symbols-outlined" style="color:#85f8c4;font-size:1.25rem;font-variation-settings:'FILL' 1;">workspace_premium</span>
+                                        </div>
+                                        <div>
+                                            <span style="display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#85f8c4;background:rgba(133,248,196,.15);border:1px solid rgba(133,248,196,.3);border-radius:999px;padding:.2rem .75rem;margin-bottom:.2rem;">Pago Único</span>
+                                            <h3 class="font-headline" style="font-size:1.25rem;font-weight:800;color:#fff;margin:0;">Licencia Vitalicia</h3>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;">
+                                        <span class="font-headline" style="font-size:2.75rem;font-weight:900;color:#fff;line-height:1;">Desde $4,999</span>
+                                    </div>
+                                    <p class="font-body" style="font-size:.8rem;color:rgba(255,255,255,.7);margin-top:.5rem;">Un solo pago — acceso de por vida, sin mensualidades.</p>
                                 </div>
-                                <p class="font-body text-sm text-primary-fixed mb-8">Para negocios establecidos que buscan control total sin pagos mensuales.</p>
-                                <ul class="space-y-4 mb-8 flex-1">
-                                    <li class="flex items-center gap-3 font-body text-sm">
-                                        <span class="material-symbols-outlined text-tertiary-fixed text-sm">check</span>
-                                        ERP Solo: $4,999
-                                    </li>
-                                    <li class="flex items-center gap-3 font-body text-sm">
-                                        <span class="material-symbols-outlined text-tertiary-fixed text-sm">check</span>
-                                        ERP + CRM: $7,999
-                                    </li>
-                                    <li class="flex items-center gap-3 font-body text-sm">
-                                        <span class="material-symbols-outlined text-tertiary-fixed text-sm">check</span>
-                                        Usuarios y citas ilimitadas
-                                    </li>
-                                </ul>
-                                <button class="w-full py-3 rounded-md font-label font-semibold text-on-tertiary btn-tertiary btn-pricing-trigger">
-                                    Comprar Licencia
-                                </button>
+                                <!-- Card Body -->
+                                <div style="padding:1.5rem 2rem 2rem;flex:1;display:flex;flex-direction:column;">
+                                    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.875rem;flex:1;">
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:rgba(133,248,196,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#85f8c4;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:rgba(255,255,255,.9);"><strong>ERP Solo</strong> — $4,999 pago único</span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:rgba(133,248,196,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#85f8c4;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:rgba(255,255,255,.9);"><strong>ERP + CRM</strong> — $7,999 pago único</span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:rgba(133,248,196,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#85f8c4;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:rgba(255,255,255,.9);">Usuarios y citas <strong>ilimitadas</strong></span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:rgba(133,248,196,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#85f8c4;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:rgba(255,255,255,.9);">Soporte prioritario de por vida</span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:rgba(133,248,196,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#85f8c4;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:rgba(255,255,255,.9);">Sin mensualidades ni renovaciones</span>
+                                        </li>
+                                    </ul>
+                                    <button class="btn-pricing-trigger" style="width:100%;padding:.875rem;border-radius:.75rem;font-weight:700;font-size:.9rem;background:linear-gradient(135deg,#00422c,#005c3f);color:#85f8c4;border:none;cursor:pointer;transition:all .2s ease;letter-spacing:.01em;box-shadow:0 4px 16px rgba(0,66,44,.4);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 24px rgba(0,66,44,.5)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 16px rgba(0,66,44,.4)';">
+                                        Obtener Licencia Vitalicia →
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Slide 3: Add-on IA -->
                         <div class="pricing-slide flex flex-col">
-                            <div class="w-full max-w-md mx-auto bg-surface-container-lowest p-8 rounded-xl ambient-shadow border border-outline-variant/20 flex flex-col h-full hover:scale-[1.02] hover:shadow-lg transition-all duration-300">
-                                <h3 class="font-headline text-xl font-bold text-secondary mb-2">Add-on IA</h3>
-                                <div class="mb-6">
-                                    <span class="font-headline text-4xl font-extrabold text-on-surface">$199</span>
-                                    <span class="font-body text-secondary">/mes</span>
+                            <div class="w-full max-w-lg mx-auto flex flex-col h-full" style="background:#fff;border-radius:1.5rem;box-shadow:0 8px 40px rgba(0,50,138,.10);border:1.5px solid #e5eaf5;overflow:hidden;">
+                                <!-- Card Header -->
+                                <div style="padding:2rem 2rem 1.25rem;background:linear-gradient(135deg,#f0fdf9 0%,#dcfce7 100%);border-bottom:1px solid #bbf7d0;">
+                                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
+                                        <div style="width:2.75rem;height:2.75rem;border-radius:.875rem;background:linear-gradient(135deg,#00422c,#005c3f);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(0,66,44,.3);">
+                                            <span class="material-symbols-outlined" style="color:#85f8c4;font-size:1.25rem;font-variation-settings:'FILL' 1;">smart_toy</span>
+                                        </div>
+                                        <div>
+                                            <span style="display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#005c3f;background:#bbf7d0;border-radius:999px;padding:.2rem .75rem;margin-bottom:.2rem;">Potencia IA</span>
+                                            <h3 class="font-headline" style="font-size:1.25rem;font-weight:800;color:#00422c;margin:0;">Add-on Inteligencia Artificial</h3>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex;align-items:baseline;gap:.4rem;">
+                                        <span class="font-headline" style="font-size:3rem;font-weight:900;color:#00422c;line-height:1;">$199</span>
+                                        <span class="font-body" style="font-size:.9rem;color:#515f74;">/mes</span>
+                                    </div>
+                                    <p class="font-body" style="font-size:.8rem;color:#515f74;margin-top:.5rem;">Compatible con cualquier plan. Actívalo o desactívalo cuando quieras.</p>
                                 </div>
-                                <p class="font-body text-sm text-secondary mb-8">Módulo IA Potenciado, disponible para cualquier plan.</p>
-                                <ul class="space-y-4 mb-8 flex-1">
-                                    <li class="flex items-center gap-3 font-body text-sm">
-                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                                        Análisis predictivo de demanda
-                                    </li>
-                                    <li class="flex items-center gap-3 font-body text-sm">
-                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                                        Automatización de WhatsApp
-                                    </li>
-                                    <li class="flex items-center gap-3 font-body text-sm">
-                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                                        Insights de negocio en tiempo real
-                                    </li>
-                                </ul>
-                                <button class="w-full py-3 rounded-md font-label font-semibold text-primary border border-primary hover:bg-primary-fixed transition-colors btn-pricing-trigger">
-                                    Añadir Módulo
-                                </button>
+                                <!-- Card Body -->
+                                <div style="padding:1.5rem 2rem 2rem;flex:1;display:flex;flex-direction:column;">
+                                    <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.875rem;flex:1;">
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;"><strong>Análisis predictivo</strong> de demanda</span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;">Automatización de <strong>WhatsApp</strong></span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;">Insights de negocio en <strong>tiempo real</strong></span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;">Recomendaciones de inventario con IA</span>
+                                        </li>
+                                        <li style="display:flex;align-items:flex-start;gap:.75rem;">
+                                            <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;">
+                                                <span class="material-symbols-outlined" style="font-size:.875rem;color:#16a34a;font-variation-settings:'FILL' 1;">check</span>
+                                            </span>
+                                            <span class="font-body" style="font-size:.875rem;color:#171c1f;">Reportes ejecutivos automáticos</span>
+                                        </li>
+                                    </ul>
+                                    <button class="btn-pricing-trigger" style="width:100%;padding:.875rem;border-radius:.75rem;font-weight:700;font-size:.9rem;background:linear-gradient(135deg,#00422c,#005c3f);color:#fff;border:none;cursor:pointer;transition:all .2s ease;letter-spacing:.01em;box-shadow:0 4px 16px rgba(0,66,44,.25);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 24px rgba(0,66,44,.35)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 16px rgba(0,66,44,.25)';">
+                                        Activar Módulo IA →
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -521,8 +622,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <section class="py-24 px-6 max-w-5xl mx-auto text-center">
         <h2 class="font-headline text-4xl font-bold text-on-surface mb-8">¿Listo para llevar tu negocio al siguiente nivel?</h2>
         <p class="font-body text-secondary mb-10 max-w-2xl mx-auto">Únete a cientos de emprendedores que ya digitalizaron su operación.</p>
-        <button id="open-login-btn-cta" class="btn-primary px-10 py-4 font-label font-bold text-lg shadow-lg">
-            Crear cuenta gratis
+        <button id="open-register-btn-cta" class="btn-primary px-10 py-4 font-label font-bold text-lg shadow-lg">
+            Registrarse ahora
         </button>
     </section>
 
@@ -590,7 +691,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 </div>
                 <div>
                     <label for="register-email" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Correo Electrónico</label>
-                    <input type="email" name="email" id="register-email" required class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm" placeholder="usuario@taller.com">
+                    <input type="email" name="email" id="register-email" required class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm" placeholder="usuario@taller.com" autocomplete="email">
+                    <!-- Indicador de disponibilidad de correo (DOM en tiempo real) -->
+                    <div id="register-email-feedback" class="flex items-center gap-1.5 mt-1.5 text-xs font-medium min-h-[18px] transition-all duration-300" aria-live="polite"></div>
                 </div>
                 <div>
                     <label for="register-password" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Contraseña</label>
@@ -609,6 +712,148 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <!-- Script for Modal Interactions -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            // ==========================================
+            // VALIDACIÓN DE CORREO EN TIEMPO REAL (DOM)
+            // ==========================================
+            const registerEmailInput  = document.getElementById('register-email');
+            const emailFeedback       = document.getElementById('register-email-feedback');
+            const registerSubmitBtn   = document.querySelector('#register-form button[type="submit"]');
+
+            // Estados visuales del indicador
+            const feedbackStates = {
+                checking: {
+                    icon : 'hourglass_top',
+                    color: 'text-slate-400',
+                    text : 'Verificando...',
+                },
+                available: {
+                    icon : 'check_circle',
+                    color: 'text-emerald-600',
+                    text : 'Correo disponible.',
+                },
+                taken: {
+                    icon : 'cancel',
+                    color: 'text-red-500',
+                    text : 'Este correo ya está registrado.',
+                },
+                invalid: {
+                    icon : 'warning',
+                    color: 'text-amber-500',
+                    text : 'Formato de correo no válido.',
+                },
+                empty: { icon: '', color: '', text: '' },
+            };
+
+            /**
+             * Actualiza el nodo DOM del feedback según el estado dado.
+             * @param {'checking'|'available'|'taken'|'invalid'|'empty'} state
+             * @param {string} [customText] - Texto alternativo opcional.
+             */
+            function setFeedback(state, customText) {
+                const cfg = feedbackStates[state] ?? feedbackStates.empty;
+                const label = customText ?? cfg.text;
+
+                if (!label) {
+                    emailFeedback.innerHTML = '';
+                    return;
+                }
+
+                emailFeedback.innerHTML =
+                    `<span class="material-symbols-outlined text-sm leading-none ${cfg.color}">${cfg.icon}</span>` +
+                    `<span class="${cfg.color}">${label}</span>`;
+
+                // Actualizar borde del input
+                registerEmailInput.classList.remove(
+                    'border-emerald-400', 'border-red-400', 'border-amber-400', 'border-slate-200'
+                );
+                if (state === 'available')  registerEmailInput.classList.add('border-emerald-400');
+                if (state === 'taken')      registerEmailInput.classList.add('border-red-400');
+                if (state === 'invalid')    registerEmailInput.classList.add('border-amber-400');
+                if (state === 'empty' || state === 'checking') registerEmailInput.classList.add('border-slate-200');
+            }
+
+            // Habilitar/deshabilitar el botón de submit según disponibilidad
+            let emailIsAvailable = false;
+
+            function updateSubmitState(available) {
+                emailIsAvailable = available;
+                if (registerSubmitBtn) {
+                    registerSubmitBtn.disabled = !available;
+                    registerSubmitBtn.style.opacity = available ? '1' : '0.5';
+                    registerSubmitBtn.style.cursor  = available ? 'pointer' : 'not-allowed';
+                }
+            }
+
+            // Debounce: esperar 550 ms tras la última tecla antes de consultar
+            let debounceTimer = null;
+            const DEBOUNCE_MS = 550;
+
+            registerEmailInput.addEventListener('input', () => {
+                const email = registerEmailInput.value.trim();
+
+                clearTimeout(debounceTimer);
+                updateSubmitState(false);
+
+                if (email === '') {
+                    setFeedback('empty');
+                    return;
+                }
+
+                // Validación de formato local antes de ir al servidor
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    setFeedback('invalid');
+                    return;
+                }
+
+                setFeedback('checking');
+
+                debounceTimer = setTimeout(() => {
+                    // Petición AJAX al endpoint PHP
+                    const formData = new FormData();
+                    formData.append('email', email);
+
+                    fetch('php/check_email.php', {
+                        method : 'POST',
+                        body   : formData,
+                    })
+                    .then(res => {
+                        if (!res.ok) throw new Error('Error de red');
+                        return res.json();
+                    })
+                    .then(data => {
+                        // Solo aplicar si el input no cambió mientras esperábamos
+                        if (registerEmailInput.value.trim() !== email) return;
+
+                        if (data.available === true) {
+                            setFeedback('available', data.message);
+                            updateSubmitState(true);
+                        } else if (data.available === false) {
+                            const isTaken = data.message && data.message.toLowerCase().includes('registrado');
+                            setFeedback(isTaken ? 'taken' : 'invalid', data.message);
+                            updateSubmitState(false);
+                        }
+                    })
+                    .catch(() => {
+                        // Si hay error de red, no bloquear el envío pero mostrar aviso
+                        setFeedback('empty');
+                        updateSubmitState(true);
+                    });
+                }, DEBOUNCE_MS);
+            });
+
+            // Restablecer estado al limpiar el campo manualmente
+            registerEmailInput.addEventListener('blur', () => {
+                if (registerEmailInput.value.trim() === '') {
+                    setFeedback('empty');
+                    updateSubmitState(false);
+                }
+            });
+            // ==========================================
+            // FIN VALIDACIÓN DE CORREO EN TIEMPO REAL
+            // ==========================================
+
             const modal = document.getElementById('login-modal');
             const closeBtn = document.getElementById('close-login-btn');
             const loginForm = document.getElementById('login-form');
@@ -624,13 +869,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 document.getElementById('open-login-btn-nav'),
                 document.getElementById('open-login-btn-mobile'),
                 document.getElementById('open-login-btn-hero'),
-                document.getElementById('open-login-btn-cta')
             ];
 
             // Also attach to pricing plans & demo
             document.querySelectorAll('.btn-pricing-trigger').forEach(btn => triggers.push(btn));
             const demoBtn = document.getElementById('open-login-btn-demo');
             if (demoBtn) triggers.push(demoBtn);
+
 
             const openModal = () => {
                 modal.classList.remove('hidden');
@@ -672,6 +917,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 e.preventDefault();
                 showLogin();
             });
+
+            // Botón CTA final → abre modal directamente en el tab de REGISTRO
+            const registerCtaBtn = document.getElementById('open-register-btn-cta');
+            if (registerCtaBtn) {
+                registerCtaBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal();
+                    showRegister();
+                });
+            }
 
             triggers.forEach(btn => {
                 if (btn) {

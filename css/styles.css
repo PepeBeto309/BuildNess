@@ -364,8 +364,21 @@ textarea            { overflow: auto; resize: vertical; min-height: 80px; }
 }
 
 .submenu li a:hover            { color: var(--primary); background: var(--bg-hover); }
-.menu-check:checked ~ .submenu { max-height: 280px; padding-bottom: 6px; }
+.menu-check:checked ~ .submenu { max-height: 320px; padding-bottom: 6px; }
 .menu-check:checked ~ .menu-btn .chevron { transform: rotate(90deg); }
+
+/* Sub-ítem activo — mismo color de marca que el dashboard */
+.submenu li a.active {
+  color: var(--primary);
+  background: var(--primary-subtle);
+  border-left: 3px solid var(--primary);
+  padding-left: 5px;
+  font-weight: 600;
+}
+
+.submenu li a.active:hover {
+  background: var(--primary-light);
+}
 
 /* ==========================================================================
    CONTENT

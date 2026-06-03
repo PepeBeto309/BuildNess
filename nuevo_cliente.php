@@ -60,7 +60,7 @@ requerir_autenticacion();
 
     <!-- SIDEBAR -->
     <?php
-    $sidebar_activo = 'clientes';
+    $sidebar_activo           = 'clientes_nuevo';
     $sidebar_clientes_abierto = true;
     require __DIR__ . '/php/sidebar.php';
     ?>

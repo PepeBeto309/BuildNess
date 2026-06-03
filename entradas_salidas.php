@@ -49,6 +49,7 @@ $salidas = obtener_movimientos_inventario('salida');
     </header>
 
     <?php
+    $sidebar_activo             = 'inventario_entradas';
     $sidebar_inventario_abierto = true;
     require __DIR__ . '/php/sidebar.php';
     ?>

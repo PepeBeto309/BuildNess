@@ -80,6 +80,7 @@ $consulta = obtener_clientes();
 
 
     <?php
+    $sidebar_activo           = 'clientes_dir';
     $sidebar_clientes_abierto = true;
     require __DIR__ . '/php/sidebar.php';
     ?>

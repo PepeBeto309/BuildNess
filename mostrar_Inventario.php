@@ -137,6 +137,7 @@ $modal_abierto = $mensaje_tipo === 'error' && ($modo_modal === 'editar' || isset
     </header>
 
     <?php
+    $sidebar_activo             = 'inventario_stock';
     $sidebar_inventario_abierto = true;
     require __DIR__ . '/php/sidebar.php';
     ?>

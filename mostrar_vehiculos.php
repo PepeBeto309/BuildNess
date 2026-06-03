@@ -80,6 +80,7 @@ $consulta = obtener_vehiculos();
 
 
     <?php
+    $sidebar_activo           = 'vehiculos_dir';
     $sidebar_clientes_abierto = true;
     require __DIR__ . '/php/sidebar.php';
     ?>
