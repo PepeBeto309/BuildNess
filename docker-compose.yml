@@ -1,0 +1,54 @@
+services:
+
+  # -------------------------------------------------------
+  # Servicio: Base de Datos MySQL 8.0
+  # -------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: buildness_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE:      ${MYSQL_DATABASE}
+      MYSQL_USER:          ${MYSQL_USER}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
+    volumes:
+      # Datos persistentes del servidor MySQL
+      - buildness_db_data:/var/lib/mysql
+      # Script SQL para inicializar la base de datos al primer arranque
+      - ./database/plantilla_taller.sql:/docker-entrypoint-initdb.d/plantilla_taller.sql:ro
+    ports:
+      - "3307:3306"   # Puerto 3307 en el host para no conflictuar con XAMPP
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "buildness", "--password=${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------
+  # Servicio: Aplicación Web (PHP 8.1 + Apache)
+  # -------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: buildness_web
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST:     ${DB_HOST}
+      DB_PORT:     ${DB_PORT}
+      DB_NAME:     ${DB_NAME}
+      DB_USER:     ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # Montaje en caliente del código fuente para desarrollo
+      - .:/var/www/html
+    ports:
+      - "8080:80"   # Accede a la app en http://localhost:8080
+
+volumes:
+  buildness_db_data:
+    driver: local
