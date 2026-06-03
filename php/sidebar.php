@@ -108,3 +108,35 @@ $act_dashboard = $sidebar_activo === 'dashboard' ? ' active' : '';
     </div>
 
 </aside>
+
+<div id="sidebar-overlay"></div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var menuToggle = document.getElementById('menu-toggle');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebar-overlay');
+
+    if (menuToggle && sidebar && overlay) {
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.toggle('sidebar-open');
+            overlay.classList.toggle('is-visible');
+        });
+
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('is-visible');
+        });
+
+        // Cerrar sidebar si se hace clic en un enlace en móviles
+        var sidebarLinks = sidebar.querySelectorAll('.menu-btn:not(label), .submenu a');
+        sidebarLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                sidebar.classList.remove('sidebar-open');
+                overlay.classList.remove('is-visible');
+            });
+        });
+    }
+});
+</script>
+

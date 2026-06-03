@@ -5,8 +5,8 @@
     $mensaje = '';
 
     if (isset($_GET['eliminar'])) {
-        $id = filter_var($_GET['eliminar'], FILTER_VALIDATE_INT);
-        if ($id && borrar_clientes($id)) {
+        $id = $_GET['eliminar'];
+        if ($id !== '' && borrar_clientes($id)) {
             header('Location: mostrar_clientes.php?msg=eliminado');
             exit;
         }
@@ -31,7 +31,6 @@
 
     <title>Salvatori - Nuevo Cliente</title>
 
-    <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/styles.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -45,6 +44,9 @@
     <header id="main-header">
 
         <div class="logo-area">
+            <button id="menu-toggle" class="menu-toggle-btn" aria-label="Abrir menú">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <div class="logo-box">
                 <img src="assets/img/logo-salvatori.png">
             </div>
@@ -89,9 +91,10 @@
     <table class="tabla-salvatori">
         <thead>
             <tr>
-                <th>Nombres</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
+                <th>Clave</th>
+                <th>Nombre Completo</th>
+                <th>Teléfono</th>
+                <th>Email</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -99,11 +102,12 @@
         <tbody>
             <?php while($cliente = mysqli_fetch_assoc($consulta)): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($cliente['nombres']); ?></td>
-                    <td><?php echo htmlspecialchars($cliente['apellido_paterno'] ?? $cliente['apellido_Paterno'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars($cliente['apellido_materno'] ?? $cliente['apellido_Materno'] ?? ''); ?></td>
+                    <td><?php echo htmlspecialchars($cliente['Clave_Cliente']); ?></td>
+                    <td><?php echo htmlspecialchars($cliente['Nombre']); ?></td>
+                    <td><?php echo htmlspecialchars($cliente['Telefono']); ?></td>
+                    <td><?php echo htmlspecialchars($cliente['Email']); ?></td>
                     <td>
-                        <a href="mostrar_clientes.php?eliminar=<?php echo (int) $cliente['id']; ?>"
+                        <a href="mostrar_clientes.php?eliminar=<?php echo urlencode($cliente['Clave_Cliente']); ?>"
                            class="btn-tabla btn-tabla-borrar"
                            title="Eliminar cliente"
                            onclick="return confirm('¿Eliminar este cliente y sus vehículos?');">

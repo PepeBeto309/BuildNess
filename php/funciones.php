@@ -1,18 +1,25 @@
 <?php
 
-//$id = $_POST['id'];
+function inventario_asegurar_sistema($db) {
+    $sql1 = "INSERT IGNORE INTO Clientes (Clave_Cliente, Nombre, Activo) VALUES ('CLI-SYSTEM', 'SISTEMA', 1);";
+    mysqli_query($db, $sql1);
+
+    $sql2 = "INSERT IGNORE INTO Vehiculos (Clave_Vehiculo, Clave_Cliente, Activo) VALUES ('VEH-SYSTEM', 'CLI-SYSTEM', 1);";
+    mysqli_query($db, $sql2);
+
+    $sql3 = "INSERT IGNORE INTO OT (OT_Num, Fecha, Clave_Cliente, Clave_Vehiculo, Estado) VALUES ('OT-SYSTEM', CURDATE(), 'CLI-SYSTEM', 'VEH-SYSTEM', 'SISTEMA');";
+    mysqli_query($db, $sql3);
+
+    $sql4 = "INSERT IGNORE INTO OT (OT_Num, Fecha, Clave_Cliente, Clave_Vehiculo, Estado) VALUES ('OT-BAJA', CURDATE(), 'CLI-SYSTEM', 'VEH-SYSTEM', 'BAJA');";
+    mysqli_query($db, $sql4);
+}
+
 function obtener_clientes() {
     try {
         require 'databaseS.php';
-
-
-        $sql = "SELECT * FROM clientes;";
-
-        $consulta = mysqli_query($db, $sql);
-
-        return $consulta;
-        
-    }catch (\Throwable $th){
+        $sql = "SELECT Clave_Cliente, Nombre, Telefono, Email FROM Clientes WHERE Clave_Cliente != 'CLI-SYSTEM' ORDER BY Clave_Cliente DESC;";
+        return mysqli_query($db, $sql);
+    } catch (\Throwable $th) {
         var_dump($th);
     }
 }
@@ -20,102 +27,66 @@ function obtener_clientes() {
 function obtener_vehiculos() {
     try {
         require 'databaseS.php';
-
-        $sql = "SELECT v.id, v.marca, v.modelo, v.anio, v.placa, v.vin, v.cliente_id,
-                TRIM(CONCAT(
-                    c.nombres, ' ',
-                    c.apellido_paterno, ' ',
-                    IFNULL(c.apellido_materno, '')
-                )) AS dueno
-                FROM vehiculos v
-                INNER JOIN clientes c ON v.cliente_id = c.id
-                ORDER BY v.id DESC;";
-
-        $consulta = mysqli_query($db, $sql);
-
-        return $consulta;
-        
-    }catch (\Throwable $th){
+        $sql = "SELECT v.Clave_Vehiculo, v.Marca, v.Modelo, v.Anio AS `Año`, v.Placa, v.Vin, v.Clave_Cliente, c.Nombre AS dueno
+                FROM Vehiculos v
+                INNER JOIN Clientes c ON v.Clave_Cliente = c.Clave_Cliente
+                WHERE v.Clave_Vehiculo != 'VEH-SYSTEM'
+                ORDER BY v.Clave_Vehiculo DESC;";
+        return mysqli_query($db, $sql);
+    } catch (\Throwable $th) {
         var_dump($th);
     }
 }
 
-function borrar_clientes($id) {
+function borrar_clientes($clave) {
     try {
         require 'databaseS.php';
+        $clave = trim((string)$clave);
+        if ($clave === '') return false;
 
-        $id = (int) $id;
-        if ($id <= 0) {
-            return false;
+        $stmtV = mysqli_prepare($db, "DELETE FROM Vehiculos WHERE Clave_Cliente = ?");
+        if ($stmtV) {
+            mysqli_stmt_bind_param($stmtV, 's', $clave);
+            mysqli_stmt_execute($stmtV);
+            mysqli_stmt_close($stmtV);
         }
 
-        $stmtV = mysqli_prepare($db, "DELETE FROM vehiculos WHERE cliente_id = ?");
-        if (!$stmtV) {
-            return false;
-        }
-        mysqli_stmt_bind_param($stmtV, 'i', $id);
-        mysqli_stmt_execute($stmtV);
-        mysqli_stmt_close($stmtV);
-
-        $stmt = mysqli_prepare($db, "DELETE FROM clientes WHERE id = ?");
-        if (!$stmt) {
-            return false;
-        }
-        mysqli_stmt_bind_param($stmt, 'i', $id);
+        $stmt = mysqli_prepare($db, "DELETE FROM Clientes WHERE Clave_Cliente = ?");
+        if (!$stmt) return false;
+        mysqli_stmt_bind_param($stmt, 's', $clave);
         $resultado = mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
-
         return $resultado;
-        
-    }catch (\Throwable $th){
+    } catch (\Throwable $th) {
         var_dump($th);
         return false;
     }
 }
 
-function borrar_vehiculos($id) {
+function borrar_vehiculos($clave) {
     try {
         require 'databaseS.php';
+        $clave = trim((string)$clave);
+        if ($clave === '') return false;
 
-        $id = (int) $id;
-        if ($id <= 0) {
-            return false;
-        }
-
-        $stmt = mysqli_prepare($db, "DELETE FROM vehiculos WHERE id = ?");
-        if (!$stmt) {
-            return false;
-        }
-        mysqli_stmt_bind_param($stmt, 'i', $id);
+        $stmt = mysqli_prepare($db, "DELETE FROM Vehiculos WHERE Clave_Vehiculo = ?");
+        if (!$stmt) return false;
+        mysqli_stmt_bind_param($stmt, 's', $clave);
         $resultado = mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
-
         return $resultado;
-        
-    }catch (\Throwable $th){
+    } catch (\Throwable $th) {
         var_dump($th);
         return false;
     }
-}
-
-function inventario_asegurar_tabla() {
-    require 'databaseS.php';
-    $sql = "CREATE TABLE IF NOT EXISTS inventario_refacciones (
-        id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        codigo VARCHAR(64) NOT NULL DEFAULT '',
-        nombre VARCHAR(200) NOT NULL,
-        cantidad INT NOT NULL DEFAULT 0,
-        unidad VARCHAR(32) NOT NULL DEFAULT 'pz',
-        creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-    mysqli_query($db, $sql);
 }
 
 function obtener_inventario_refacciones() {
     try {
         require 'databaseS.php';
-        inventario_asegurar_tabla();
-        $sql = "SELECT id, codigo, nombre, cantidad, unidad, creado_en FROM inventario_refacciones ORDER BY id DESC;";
+        inventario_asegurar_sistema($db);
+        $sql = "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad, Fecha_Salida as creado_en 
+                FROM Inventario WHERE OT_Num = 'OT-SYSTEM' ORDER BY Fecha_Salida DESC, Codigo DESC;";
         return mysqli_query($db, $sql);
     } catch (\Throwable $th) {
         var_dump($th);
@@ -123,68 +94,16 @@ function obtener_inventario_refacciones() {
     }
 }
 
-function inventario_asegurar_movimientos() {
-    require 'databaseS.php';
-    inventario_asegurar_tabla();
-    $sql = "CREATE TABLE IF NOT EXISTS inventario_movimientos (
-        id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        refaccion_id INT UNSIGNED NULL,
-        tipo ENUM('entrada','salida') NOT NULL,
-        codigo VARCHAR(64) NOT NULL DEFAULT '',
-        nombre VARCHAR(200) NOT NULL,
-        cantidad INT NOT NULL DEFAULT 0,
-        unidad VARCHAR(32) NOT NULL DEFAULT 'pz',
-        nota VARCHAR(255) NOT NULL DEFAULT '',
-        registrado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        INDEX idx_tipo (tipo),
-        INDEX idx_fecha (registrado_en)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-    mysqli_query($db, $sql);
-}
-
-function registrar_movimiento_inventario($tipo, $refaccion_id, $codigo, $nombre, $cantidad, $unidad, $nota = '') {
+function obtener_inventario_refaccion_por_id($codigo) {
     try {
         require 'databaseS.php';
-        inventario_asegurar_movimientos();
-        $tipo = $tipo === 'salida' ? 'salida' : 'entrada';
-        $refaccion_id = $refaccion_id > 0 ? (int) $refaccion_id : null;
-        $codigo = trim((string) $codigo);
-        $nombre = trim((string) $nombre);
-        $unidad = trim((string) $unidad) !== '' ? trim($unidad) : 'pz';
-        $cantidad = max(0, (int) $cantidad);
-        $nota = trim((string) $nota);
-
-        $stmt = mysqli_prepare(
-            $db,
-            "INSERT INTO inventario_movimientos (refaccion_id, tipo, codigo, nombre, cantidad, unidad, nota)
-             VALUES (?, ?, ?, ?, ?, ?, ?)"
-        );
-        if (!$stmt) {
-            return false;
-        }
-        mysqli_stmt_bind_param($stmt, 'isssiss', $refaccion_id, $tipo, $codigo, $nombre, $cantidad, $unidad, $nota);
-        $ok = mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-        return $ok;
-    } catch (\Throwable $th) {
-        var_dump($th);
-        return false;
-    }
-}
-
-function obtener_inventario_refaccion_por_id($id) {
-    try {
-        require 'databaseS.php';
-        inventario_asegurar_tabla();
-        $id = (int) $id;
-        if ($id <= 0) {
-            return null;
-        }
-        $stmt = mysqli_prepare($db, "SELECT id, codigo, nombre, cantidad, unidad FROM inventario_refacciones WHERE id = ?");
-        if (!$stmt) {
-            return null;
-        }
-        mysqli_stmt_bind_param($stmt, 'i', $id);
+        inventario_asegurar_sistema($db);
+        $codigo = trim((string)$codigo);
+        if ($codigo === '') return null;
+        
+        $stmt = mysqli_prepare($db, "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad FROM Inventario WHERE Codigo = ? AND OT_Num = 'OT-SYSTEM'");
+        if (!$stmt) return null;
+        mysqli_stmt_bind_param($stmt, 's', $codigo);
         mysqli_stmt_execute($stmt);
         $resultado = mysqli_stmt_get_result($stmt);
         $fila = mysqli_fetch_assoc($resultado);
@@ -199,32 +118,21 @@ function obtener_inventario_refaccion_por_id($id) {
 function agregar_inventario_refaccion($codigo, $nombre, $cantidad, $unidad) {
     try {
         require 'databaseS.php';
-        inventario_asegurar_tabla();
-        $codigo = trim((string) $codigo);
-        $nombre = trim((string) $nombre);
-        $unidad = trim((string) $unidad) !== '' ? trim($unidad) : 'pz';
-        $cantidad = (int) $cantidad;
-        if ($nombre === '' || $cantidad < 0) {
-            return false;
-        }
-        $stmt = mysqli_prepare($db, "INSERT INTO inventario_refacciones (codigo, nombre, cantidad, unidad) VALUES (?, ?, ?, ?)");
-        if (!$stmt) {
-            return false;
-        }
-        mysqli_stmt_bind_param($stmt, 'ssis', $codigo, $nombre, $cantidad, $unidad);
+        inventario_asegurar_sistema($db);
+        
+        $codigo = trim((string)$codigo) !== '' ? trim((string)$codigo) : 'REF-' . strtoupper(substr(uniqid(), -10));
+        $nombre = trim((string)$nombre);
+        $unidad = trim((string)$unidad) !== '' ? trim($unidad) : 'pz';
+        $cantidad = (int)$cantidad;
+        if ($nombre === '' || $cantidad < 0) return false;
+        
+        $ot_num = 'OT-SYSTEM';
+        $fecha = date('Y-m-d');
+        
+        $stmt = mysqli_prepare($db, "INSERT INTO Inventario (Codigo, Fecha_Salida, OT_Num, Pieza, Cantidad, Precio_Unitario, Tipo, Total) VALUES (?, ?, ?, ?, ?, 0, ?, 0)");
+        if (!$stmt) return false;
+        mysqli_stmt_bind_param($stmt, 'ssssis', $codigo, $fecha, $ot_num, $nombre, $cantidad, $unidad);
         $ok = mysqli_stmt_execute($stmt);
-        if ($ok) {
-            $nuevoId = (int) mysqli_insert_id($db);
-            registrar_movimiento_inventario(
-                'entrada',
-                $nuevoId,
-                $codigo,
-                $nombre,
-                $cantidad,
-                $unidad,
-                'Alta de refacción en inventario'
-            );
-        }
         mysqli_stmt_close($stmt);
         return $ok;
     } catch (\Throwable $th) {
@@ -233,61 +141,24 @@ function agregar_inventario_refaccion($codigo, $nombre, $cantidad, $unidad) {
     }
 }
 
-function actualizar_inventario_refaccion($id, $codigo, $nombre, $cantidad, $unidad) {
+function actualizar_inventario_refaccion($codigo_original, $codigo_nuevo, $nombre, $cantidad, $unidad) {
     try {
         require 'databaseS.php';
-        inventario_asegurar_tabla();
-        $id = (int) $id;
-        $codigo = trim((string) $codigo);
-        $nombre = trim((string) $nombre);
-        $unidad = trim((string) $unidad) !== '' ? trim($unidad) : 'pz';
-        $cantidad = (int) $cantidad;
+        inventario_asegurar_sistema($db);
+        
+        $codigo_original = trim((string)$codigo_original);
+        $codigo_nuevo = trim((string)$codigo_nuevo) !== '' ? trim((string)$codigo_nuevo) : $codigo_original;
+        $nombre = trim((string)$nombre);
+        $unidad = trim((string)$unidad) !== '' ? trim($unidad) : 'pz';
+        $cantidad = (int)$cantidad;
 
-        if ($id <= 0 || $nombre === '' || $cantidad < 0) {
-            return false;
-        }
+        if ($codigo_original === '' || $nombre === '' || $cantidad < 0) return false;
 
-        $anterior = obtener_inventario_refaccion_por_id($id);
-        if (!$anterior) {
-            return false;
-        }
-
-        $stmt = mysqli_prepare(
-            $db,
-            "UPDATE inventario_refacciones SET codigo = ?, nombre = ?, cantidad = ?, unidad = ? WHERE id = ?"
-        );
-        if (!$stmt) {
-            return false;
-        }
-        mysqli_stmt_bind_param($stmt, 'ssisi', $codigo, $nombre, $cantidad, $unidad, $id);
+        $stmt = mysqli_prepare($db, "UPDATE Inventario SET Codigo = ?, Pieza = ?, Cantidad = ?, Tipo = ? WHERE Codigo = ? AND OT_Num = 'OT-SYSTEM'");
+        if (!$stmt) return false;
+        mysqli_stmt_bind_param($stmt, 'ssiss', $codigo_nuevo, $nombre, $cantidad, $unidad, $codigo_original);
         $ok = mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
-
-        if ($ok) {
-            $diff = $cantidad - (int) $anterior['cantidad'];
-            if ($diff > 0) {
-                registrar_movimiento_inventario(
-                    'entrada',
-                    $id,
-                    $codigo,
-                    $nombre,
-                    $diff,
-                    $unidad,
-                    'Entrada por edición de stock'
-                );
-            } elseif ($diff < 0) {
-                registrar_movimiento_inventario(
-                    'salida',
-                    $id,
-                    $codigo,
-                    $nombre,
-                    abs($diff),
-                    $unidad,
-                    'Salida por edición de stock'
-                );
-            }
-        }
-
         return $ok;
     } catch (\Throwable $th) {
         var_dump($th);
@@ -295,35 +166,17 @@ function actualizar_inventario_refaccion($id, $codigo, $nombre, $cantidad, $unid
     }
 }
 
-function borrar_inventario_refaccion($id) {
+function borrar_inventario_refaccion($codigo) {
     try {
         require 'databaseS.php';
-        inventario_asegurar_tabla();
-        $id = (int) $id;
-        if ($id <= 0) {
-            return false;
-        }
+        inventario_asegurar_sistema($db);
+        $codigo = trim((string)$codigo);
+        if ($codigo === '') return false;
 
-        $item = obtener_inventario_refaccion_por_id($id);
-        if (!$item) {
-            return false;
-        }
-
-        registrar_movimiento_inventario(
-            'salida',
-            $id,
-            $item['codigo'],
-            $item['nombre'],
-            (int) $item['cantidad'],
-            $item['unidad'],
-            'Baja de refacción eliminada del inventario'
-        );
-
-        $stmt = mysqli_prepare($db, "DELETE FROM inventario_refacciones WHERE id = ?");
-        if (!$stmt) {
-            return false;
-        }
-        mysqli_stmt_bind_param($stmt, 'i', $id);
+        $fecha = date('Y-m-d');
+        $stmt = mysqli_prepare($db, "UPDATE Inventario SET OT_Num = 'OT-BAJA', Fecha_Salida = ? WHERE Codigo = ? AND OT_Num = 'OT-SYSTEM'");
+        if (!$stmt) return false;
+        mysqli_stmt_bind_param($stmt, 'ss', $fecha, $codigo);
         $ok = mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         return $ok;
@@ -336,26 +189,20 @@ function borrar_inventario_refaccion($id) {
 function obtener_movimientos_inventario($tipo = null) {
     try {
         require 'databaseS.php';
-        inventario_asegurar_movimientos();
-
-        if ($tipo === 'entrada' || $tipo === 'salida') {
-            $stmt = mysqli_prepare(
-                $db,
-                "SELECT id, refaccion_id, tipo, codigo, nombre, cantidad, unidad, nota, registrado_en
-                 FROM inventario_movimientos WHERE tipo = ? ORDER BY registrado_en DESC, id DESC"
-            );
-            if (!$stmt) {
-                return false;
-            }
-            mysqli_stmt_bind_param($stmt, 's', $tipo);
-            mysqli_stmt_execute($stmt);
-            $consulta = mysqli_stmt_get_result($stmt);
-            mysqli_stmt_close($stmt);
-            return $consulta;
+        inventario_asegurar_sistema($db);
+        
+        if ($tipo === 'entrada') {
+            $sql = "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad, 'Alta de stock' as nota, Fecha_Salida as registrado_en 
+                    FROM Inventario WHERE OT_Num = 'OT-SYSTEM' ORDER BY Fecha_Salida DESC, Codigo DESC";
+            return mysqli_query($db, $sql);
+        } elseif ($tipo === 'salida') {
+            $sql = "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad, 'Baja de stock' as nota, Fecha_Salida as registrado_en 
+                    FROM Inventario WHERE OT_Num = 'OT-BAJA' ORDER BY Fecha_Salida DESC, Codigo DESC";
+            return mysqli_query($db, $sql);
         }
-
-        $sql = "SELECT id, refaccion_id, tipo, codigo, nombre, cantidad, unidad, nota, registrado_en
-                FROM inventario_movimientos ORDER BY registrado_en DESC, id DESC";
+        
+        $sql = "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad, 'Movimiento' as nota, Fecha_Salida as registrado_en 
+                FROM Inventario WHERE OT_Num IN ('OT-SYSTEM', 'OT-BAJA') ORDER BY Fecha_Salida DESC, Codigo DESC";
         return mysqli_query($db, $sql);
     } catch (\Throwable $th) {
         var_dump($th);

@@ -8,7 +8,6 @@
 
     <title>Salvatori - Portal</title>
 
-    <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/styles.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -23,6 +22,9 @@
     <header id="main-header">
 
         <div class="logo-area">
+            <button id="menu-toggle" class="menu-toggle-btn" aria-label="Abrir menú">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
             <div class="logo-box">
                 <img src="assets/img/logo-salvatori.png" alt="Salvatori Logo">
@@ -400,6 +402,34 @@
 
     </main>
 
-</body>
+    <div id="sidebar-overlay"></div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var menuToggle = document.getElementById('menu-toggle');
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('sidebar-overlay');
 
+        if (menuToggle && sidebar && overlay) {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('sidebar-open');
+                overlay.classList.toggle('is-visible');
+            });
+
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('sidebar-open');
+                overlay.classList.remove('is-visible');
+            });
+
+            var sidebarLinks = sidebar.querySelectorAll('.menu-btn:not(label), .submenu a');
+            sidebarLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    sidebar.classList.remove('sidebar-open');
+                    overlay.classList.remove('is-visible');
+                });
+            });
+        }
+    });
+    </script>
+</body>
 </html>

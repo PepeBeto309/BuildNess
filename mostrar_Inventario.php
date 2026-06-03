@@ -8,8 +8,8 @@ $modo_modal = 'agregar';
 $item_editar = null;
 
 if (isset($_GET['eliminar'])) {
-    $id = filter_var($_GET['eliminar'], FILTER_VALIDATE_INT);
-    if ($id && borrar_inventario_refaccion($id)) {
+    $id = $_GET['eliminar'];
+    if ($id !== '' && borrar_inventario_refaccion($id)) {
         header('Location: mostrar_Inventario.php?msg=eliminado');
         exit;
     }
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_inventario'])
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_inventario'])) {
-    $id = filter_var($_POST['id'] ?? 0, FILTER_VALIDATE_INT);
+    $id = $_POST['id'] ?? '';
     $ok = actualizar_inventario_refaccion(
         $id,
         $_POST['codigo'] ?? '',
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_inventario']))
     $mensaje = 'No se pudo actualizar. Verifica los datos.';
     $mensaje_tipo = 'error';
     $modo_modal = 'editar';
-    if ($id) {
+    if ($id !== '') {
         $item_editar = [
             'id' => $id,
             'codigo' => $_POST['codigo'] ?? '',
@@ -89,9 +89,7 @@ $modal_abierto = $mensaje_tipo === 'error' && ($modo_modal === 'editar' || isset
 
     <title>Salvatori - Stock de Refacciones</title>
 
-    <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/styles2.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -104,6 +102,9 @@ $modal_abierto = $mensaje_tipo === 'error' && ($modo_modal === 'editar' || isset
     <header id="main-header">
 
         <div class="logo-area">
+            <button id="menu-toggle" class="menu-toggle-btn" aria-label="Abrir menú">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <div class="logo-box">
                 <img src="assets/img/logo-salvatori.png" alt="Salvatori">
             </div>
@@ -174,7 +175,7 @@ $modal_abierto = $mensaje_tipo === 'error' && ($modo_modal === 'editar' || isset
                 <?php if ($consulta && mysqli_num_rows($consulta) > 0): ?>
                     <?php while ($fila = mysqli_fetch_assoc($consulta)): ?>
                         <tr class="fila-inventario"
-                            data-id="<?php echo (int) $fila['id']; ?>"
+                            data-id="<?php echo htmlspecialchars($fila['codigo'], ENT_QUOTES, 'UTF-8'); ?>"
                             data-codigo="<?php echo htmlspecialchars($fila['codigo'], ENT_QUOTES, 'UTF-8'); ?>"
                             data-nombre="<?php echo htmlspecialchars($fila['nombre'], ENT_QUOTES, 'UTF-8'); ?>"
                             data-cantidad="<?php echo (int) $fila['cantidad']; ?>"
