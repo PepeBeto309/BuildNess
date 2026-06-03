@@ -21,4 +21,22 @@ function requerir_autenticacion(): void {
         exit;
     }
 }
+
+/**
+ * Comprueba si el usuario logueado es administrador.
+ */
+function es_administrador(): bool {
+    return isset($_SESSION['usuario_rol']) && $_SESSION['usuario_rol'] === 'administrador';
+}
+
+/**
+ * Protege páginas administrativas. Si no es administrador, redirige a la sección de operaciones.
+ */
+function requerir_administrador(): void {
+    requerir_autenticacion();
+    if (!es_administrador()) {
+        header('Location: nueva_orden.php');
+        exit;
+    }
+}
 ?>

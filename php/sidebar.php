@@ -39,7 +39,12 @@ $act_ord_seguimiento     = act_sub($sidebar_activo, 'ordenes_seguimiento');
 $act_ord_historial       = act_sub($sidebar_activo, 'ordenes_historial');
 ?>
 <aside id="sidebar">
+    <?php
+    $rol_usuario = $_SESSION['usuario_rol'] ?? 'usuario';
+    $es_admin = ($rol_usuario === 'administrador');
+    ?>
 
+    <?php if ($es_admin): ?>
     <div class="nav-section">GENERAL</div>
 
     <div class="menu-item">
@@ -59,6 +64,7 @@ $act_ord_historial       = act_sub($sidebar_activo, 'ordenes_historial');
             <li><a href="#">Eficiencia Taller</a></li>
         </ul>
     </div>
+    <?php endif; ?>
 
     <div class="nav-section">OPERACIONES</div>
 
@@ -156,6 +162,7 @@ $act_ord_historial       = act_sub($sidebar_activo, 'ordenes_historial');
         </ul>
     </div>
 
+    <?php if ($es_admin): ?>
     <div class="menu-item">
         <input type="checkbox" id="m-fin" class="menu-check">
         <label for="m-fin" class="menu-btn">
@@ -178,6 +185,7 @@ $act_ord_historial       = act_sub($sidebar_activo, 'ordenes_historial');
             <li><a href="#"><i class="fa-solid fa-truck" style="width:14px;margin-right:4px;"></i>Proveedores</a></li>
         </ul>
     </div>
+    <?php endif; ?>
 
     <div class="nav-section">SESIÓN</div>
     <div class="menu-item">

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/php/auth.php';
-requerir_autenticacion();
+requerir_administrador();
 ?>
 <!DOCTYPE html>
 <html lang="es">

@@ -65,6 +65,21 @@
         }
 
         let valor = input.value.trim();
+        
+        // Si estamos editando y todos los campos de vehículo están vacíos, omitir validación de vehículo
+        const isEdit = document.getElementById('clave-cliente-hidden') && document.getElementById('clave-cliente-hidden').value !== '';
+        const vehCampos = ['marca', 'modelo', 'año', 'placa', 'VIN'];
+        if (isEdit && vehCampos.includes(id)) {
+            const todosVacios = vehCampos.every(cId => {
+                const inp = document.getElementById(cId);
+                return !inp || inp.value.trim() === '';
+            });
+            if (todosVacios) {
+                limpiarError(input);
+                return true;
+            }
+        }
+
         if (id === 'tel') {
             valor = valor.replace(/\s/g, '');
         }

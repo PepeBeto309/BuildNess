@@ -11,11 +11,12 @@ $item_editar = null;
 
 if (isset($_GET['eliminar'])) {
     $id = $_GET['eliminar'];
-    if ($id !== '' && borrar_inventario_refaccion($id)) {
+    $ot_num = $_GET['ot_num'] ?? 'OT-BAJA';
+    if ($id !== '' && borrar_inventario_refaccion($id, $ot_num)) {
         header('Location: mostrar_Inventario.php?msg=eliminado');
         exit;
     }
-    $mensaje = 'No se pudo eliminar el artículo.';
+    $mensaje = 'No se pudo registrar la baja del artículo.';
     $mensaje_tipo = 'error';
 }
 
@@ -341,9 +342,26 @@ $modal_abierto = $mensaje_tipo === 'error' && ($modo_modal === 'editar' || isset
                         return;
                     }
                     var nombre = filaSeleccionada.dataset.nombre || 'este artículo';
-                    if (confirm('¿Eliminar "' + nombre + '" del inventario? Se registrará como baja.')) {
-                        window.location.href = 'mostrar_Inventario.php?eliminar=' + encodeURIComponent(filaSeleccionada.dataset.id);
+                    
+                    var esOt = confirm('¿Esta baja se debe al uso de la pieza en una Orden de Trabajo (OT)?\n\nPresiona Aceptar para ingresar la OT, o Cancelar para registrarla como baja general de stock.');
+                    var otNum = 'OT-BAJA';
+                    
+                    if (esOt) {
+                        var inputOt = prompt('Por favor ingresa el número de la Orden de Trabajo (ej. OT-20260603-1234):');
+                        if (inputOt === null) return; // Canceló todo el proceso
+                        inputOt = inputOt.trim();
+                        if (inputOt === '') {
+                            alert('El número de OT no puede estar vacío si seleccionaste uso en OT.');
+                            return;
+                        }
+                        otNum = inputOt;
+                    } else {
+                        if (!confirm('¿Registrar "' + nombre + '" como baja general de stock?')) {
+                            return;
+                        }
                     }
+                    
+                    window.location.href = 'mostrar_Inventario.php?eliminar=' + encodeURIComponent(filaSeleccionada.dataset.id) + '&ot_num=' + encodeURIComponent(otNum);
                 });
             }
 

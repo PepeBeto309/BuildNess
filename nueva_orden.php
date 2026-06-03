@@ -327,6 +327,34 @@ requerir_autenticacion();
 
         @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
         .search-spinner.is-loading { display: block; }
+
+        /* Estilos para tarjetas seleccionables de OT activas */
+        .ot-activa-card {
+            padding: 10px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            background: var(--bg-surface);
+            cursor: pointer;
+            transition: all var(--dur-fast) var(--ease-out);
+        }
+        .ot-activa-card:hover {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+        }
+        .ot-activa-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-subtle);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        /* Botones de acción OT deshabilitados por defecto */
+        .btn-ot.is-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+            filter: grayscale(0.6);
+        }
     </style>
 </head>
 
@@ -374,15 +402,20 @@ requerir_autenticacion();
     <main id="content">
         <div class="form-page">
 
-            <div class="form-title">
-                <i class="fa-solid fa-file-circle-plus" style="color:var(--primary);margin-right:8px;"></i>
-                Nueva Orden de Trabajo
+            <div class="form-title" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <i class="fa-solid fa-file-circle-plus" style="color:var(--primary);margin-right:8px;"></i>
+                    <span id="ot-form-title">Nueva Orden de Trabajo</span>
+                </div>
+                <button type="button" id="btn-cancelar-edicion" class="btn btn-ot-secondary" style="display:none; width:auto; padding:5px 12px; font-size:12px; margin-left:10px;">
+                    <i class="fa-solid fa-xmark"></i> Cancelar Edición
+                </button>
             </div>
 
             <form id="ot-form" action="php/guardar_ot.php" method="POST">
 
                 <!-- OT_Num generado en el cliente, el servidor lo puede sobreescribir -->
-                <input type="hidden" name="action"    value="nueva_ot">
+                <input type="hidden" name="action"    id="ot-action-hidden" value="nueva_ot">
                 <input type="hidden" name="ot_num"    id="ot-num-hidden" value="">
                 <input type="hidden" name="clave_cliente"  id="clave-cliente-hidden" value="">
                 <input type="hidden" name="clave_vehiculo" id="clave-vehiculo-hidden" value="">
@@ -572,19 +605,19 @@ requerir_autenticacion();
                             <button type="button" class="btn-ot btn-ot-primary" id="btn-agregar-servicio">
                                 <i class="fa-solid fa-plus"></i> Agregar Servicio
                             </button>
-                            <button type="button" class="btn-ot btn-ot-info" id="btn-facturar">
+                            <button type="button" class="btn-ot btn-ot-info is-disabled" id="btn-facturar">
                                 <i class="fa-solid fa-file-invoice-dollar"></i> Facturar
                             </button>
-                            <button type="button" class="btn-ot btn-ot-secondary" id="btn-editar">
+                            <button type="button" class="btn-ot btn-ot-secondary is-disabled" id="btn-editar">
                                 <i class="fa-solid fa-pen-to-square"></i> Editar OT
                             </button>
-                            <button type="button" class="btn-ot btn-ot-success" id="btn-terminar">
+                            <button type="button" class="btn-ot btn-ot-success is-disabled" id="btn-terminar">
                                 <i class="fa-solid fa-circle-check"></i> Marcar Terminada
                             </button>
                             <button type="button" class="btn-ot btn-ot-secondary" id="btn-cotizar">
                                 <i class="fa-solid fa-file-lines"></i> Cotizar
                             </button>
-                            <button type="button" class="btn-ot btn-ot-warning" id="btn-pdf">
+                            <button type="button" class="btn-ot btn-ot-warning is-disabled" id="btn-pdf">
                                 <i class="fa-solid fa-file-pdf"></i> Generar PDF
                             </button>
                         </div>
@@ -746,6 +779,11 @@ requerir_autenticacion();
             searchInput.value            = '';
             searchInput.focus();
 
+            // Limpiar selección de OT y salir de edición
+            selectedOtNum = null;
+            if (typeof actualizarBotonesOT === 'function') actualizarBotonesOT();
+            if (typeof cancelarEdicion === 'function') cancelarEdicion();
+
             // Limpiar vehículos
             vehiculoList.innerHTML = '';
             vehiculosPlaceholder.style.display = '';
@@ -819,6 +857,27 @@ requerir_autenticacion();
             }
         }
 
+        // ── Variables de Selección y Botones de Órdenes ────────────────
+        let selectedOtNum = null;
+        const btnFacturar = document.getElementById('btn-facturar');
+        const btnEditar   = document.getElementById('btn-editar');
+        const btnTerminar = document.getElementById('btn-terminar');
+        const btnPdf      = document.getElementById('btn-pdf');
+        const btnCancelarEdicion = document.getElementById('btn-cancelar-edicion');
+
+        function actualizarBotonesOT() {
+            const hasSelection = !!selectedOtNum;
+            [btnFacturar, btnEditar, btnTerminar, btnPdf].forEach(btn => {
+                if (btn) {
+                    if (hasSelection) {
+                        btn.classList.remove('is-disabled');
+                    } else {
+                        btn.classList.add('is-disabled');
+                    }
+                }
+            });
+        }
+
         // ── Cargar OTs activas por vehículo ───────────────────────────
         function cargarOTActivas(claveVehiculo) {
             const section  = document.getElementById('ot-activas-section');
@@ -835,6 +894,8 @@ requerir_autenticacion();
                     if (ots.length === 0) {
                         section.style.display = 'none';
                         sep.style.display = 'none';
+                        selectedOtNum = null;
+                        actualizarBotonesOT();
                         return;
                     }
                     list.innerHTML = '';
@@ -847,7 +908,10 @@ requerir_autenticacion();
                         }[ot.Estado] || 'st-cotizado';
 
                         const card = document.createElement('div');
-                        card.style.cssText = 'padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;background:var(--bg-base);';
+                        card.className = 'ot-activa-card';
+                        if (selectedOtNum === ot.OT_Num) {
+                            card.classList.add('selected');
+                        }
                         card.innerHTML = `
                             <div style="display:flex;justify-content:space-between;align-items:center;">
                                 <span style="font-size:12px;font-weight:700;color:var(--text-primary);">${escapeHtml(ot.OT_Num)}</span>
@@ -857,12 +921,34 @@ requerir_autenticacion();
                                 ${escapeHtml(ot.Fecha)}
                                 ${ot.Trabajo_Realizado ? ' · ' + escapeHtml(ot.Trabajo_Realizado.substring(0,50)) + (ot.Trabajo_Realizado.length > 50 ? '…' : '') : ''}
                             </div>`;
+                        
+                        // Agregar listener de click para selección
+                        card.addEventListener('click', () => {
+                            if (card.classList.contains('selected')) {
+                                card.classList.remove('selected');
+                                selectedOtNum = null;
+                            } else {
+                                document.querySelectorAll('.ot-activa-card').forEach(c => c.classList.remove('selected'));
+                                card.classList.add('selected');
+                                selectedOtNum = ot.OT_Num;
+                            }
+                            actualizarBotonesOT();
+                        });
+
                         list.appendChild(card);
                     });
+                    
+                    // Si ya no existe la orden que estaba seleccionada, limpiar selección
+                    if (selectedOtNum && !ots.some(o => o.OT_Num === selectedOtNum)) {
+                        selectedOtNum = null;
+                    }
+                    actualizarBotonesOT();
                 })
                 .catch(() => {
                     section.style.display = 'none';
                     sep.style.display = 'none';
+                    selectedOtNum = null;
+                    actualizarBotonesOT();
                 });
         }
 
@@ -870,8 +956,157 @@ requerir_autenticacion();
         document.addEventListener('change', e => {
             if (e.target && e.target.name === 'clave_vehiculo_radio') {
                 const clave = e.target.value;
+                selectedOtNum = null;
+                actualizarBotonesOT();
                 if (clave) cargarOTActivas(clave);
             }
+        });
+
+        // ── Acciones de los Botones ────────────────────────────────────
+        
+        // Agregar Servicio (Nueva orden / Limpiar modo edición)
+        document.getElementById('btn-agregar-servicio').addEventListener('click', () => {
+            cancelarEdicion();
+            document.getElementById('km-entrada').focus();
+        });
+
+        // Cotizar (cambiar estado a COTIZACION)
+        document.getElementById('btn-cotizar').addEventListener('click', () => {
+            document.getElementById('estado-ot').value = 'COTIZACION';
+            document.getElementById('monto-ot').focus();
+        });
+
+        // Editar OT
+        btnEditar.addEventListener('click', () => {
+            if (!selectedOtNum) return;
+            
+            fetch('php/get_ot_detalles.php?ot_num=' + encodeURIComponent(selectedOtNum))
+                .then(r => r.json())
+                .then(ot => {
+                    if (ot.error) {
+                        alert('Error: ' + ot.error);
+                        return;
+                    }
+                    
+                    // Rellenar campos del formulario
+                    document.getElementById('km-entrada').value = ot.Odometer_In || '';
+                    document.getElementById('descripcion-trabajo').value = ot.Trabajo_Realizado || '';
+                    document.getElementById('horas-mano-obra').value = ot.Horas_Facturadas || '';
+                    document.getElementById('costo-hora').value = ot.Costo_MO_Hr || '';
+                    document.getElementById('total-refacciones').value = ot.Refacciones || '';
+                    document.getElementById('mecanico').value = ot.MecanicoNombre || '';
+                    document.getElementById('estado-ot').value = ot.Estado || 'NUEVO';
+                    document.getElementById('monto-ot').value = ot.Total_Cobrado || '';
+                    
+                    // Recalcular montos sugeridos y mano de obra
+                    recalcular();
+                    
+                    // Cambiar acción a actualizar
+                    document.getElementById('ot-action-hidden').value = 'editar_ot';
+                    document.getElementById('ot-num-hidden').value = ot.OT_Num;
+                    
+                    // Actualizar UI del formulario
+                    document.getElementById('ot-form-title').textContent = 'Editar Orden de Trabajo: ' + ot.OT_Num;
+                    document.getElementById('btn-guardar-ot').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Actualizar Orden de Trabajo';
+                    btnCancelarEdicion.style.display = 'block';
+                    
+                    // Scroll suave
+                    document.querySelector('.form-page').scrollIntoView({ behavior: 'smooth' });
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error de red al intentar obtener los detalles de la orden.');
+                });
+        });
+
+        // Cancelar Edición
+        function cancelarEdicion() {
+            // Generar nuevo ot_num aleatorio original
+            const now  = new Date();
+            const pad  = n => String(n).padStart(2, '0');
+            const otNum = 'OT-' + now.getFullYear()
+                        + pad(now.getMonth() + 1)
+                        + pad(now.getDate())
+                        + '-' + Math.floor(Math.random() * 9000 + 1000);
+            
+            document.getElementById('ot-action-hidden').value = 'nueva_ot';
+            document.getElementById('ot-num-hidden').value = otNum;
+            
+            // Limpiar campos
+            document.getElementById('km-entrada').value = '';
+            document.getElementById('descripcion-trabajo').value = '';
+            document.getElementById('horas-mano-obra').value = '';
+            document.getElementById('costo-hora').value = '';
+            document.getElementById('total-refacciones').value = '';
+            document.getElementById('mecanico').value = '';
+            document.getElementById('estado-ot').value = 'NUEVO';
+            document.getElementById('monto-ot').value = '';
+            
+            recalcular();
+            
+            // Revertir UI
+            document.getElementById('ot-form-title').textContent = 'Nueva Orden de Trabajo';
+            document.getElementById('btn-guardar-ot').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Orden de Trabajo';
+            btnCancelarEdicion.style.display = 'none';
+        }
+        
+        btnCancelarEdicion.addEventListener('click', cancelarEdicion);
+
+        // Marcar Terminada
+        btnTerminar.addEventListener('click', () => {
+            if (!selectedOtNum) return;
+            
+            if (!confirm(`¿Estás seguro de que deseas marcar la orden ${selectedOtNum} como terminada?`)) {
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('ot_num', selectedOtNum);
+            formData.append('estado', 'TERMINADO');
+            
+            fetch('php/actualizar_estado_ot.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    alert(`La orden ${selectedOtNum} ha sido marcada como terminada.`);
+                    
+                    // Si estábamos editando esta orden, cancelar edición
+                    if (document.getElementById('ot-num-hidden').value === selectedOtNum) {
+                        cancelarEdicion();
+                    }
+                    
+                    // Limpiar selección
+                    selectedOtNum = null;
+                    actualizarBotonesOT();
+                    
+                    // Recargar lista de OTs activas del vehículo
+                    const checkedRadio = document.querySelector('input[name="clave_vehiculo_radio"]:checked');
+                    if (checkedRadio) {
+                        cargarOTActivas(checkedRadio.value);
+                    }
+                } else {
+                    alert('Error: ' + (res.error || 'No se pudo actualizar el estado de la orden.'));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Error de red al actualizar el estado de la orden.');
+            });
+        });
+
+        // Imprimir Recibo / Generar PDF
+        btnPdf.addEventListener('click', () => {
+            if (!selectedOtNum) return;
+            window.open('imprimir_recibo.php?tipo=recibo&ot_num=' + encodeURIComponent(selectedOtNum), '_blank');
+        });
+
+        // Imprimir Factura (con IVA +16%)
+        btnFacturar.addEventListener('click', () => {
+            if (!selectedOtNum) return;
+            window.open('imprimir_recibo.php?tipo=factura&ot_num=' + encodeURIComponent(selectedOtNum), '_blank');
         });
 
         // ── Validación antes de enviar ─────────────────────────────────

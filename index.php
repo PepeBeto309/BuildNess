@@ -47,7 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         $_SESSION['usuario_email'] = $user['email'];
                         $_SESSION['usuario_rol'] = $user['rol'] ?? 'usuario';
                         
-                        header('Location: dashboard.php');
+                        if ($_SESSION['usuario_rol'] === 'administrador') {
+                            header('Location: dashboard.php');
+                        } else {
+                            header('Location: nueva_orden.php');
+                        }
                         exit;
                     } else {
                         $error_message = 'El correo o la contraseña son incorrectos.';

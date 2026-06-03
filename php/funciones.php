@@ -166,17 +166,18 @@ function actualizar_inventario_refaccion($codigo_original, $codigo_nuevo, $nombr
     }
 }
 
-function borrar_inventario_refaccion($codigo) {
+function borrar_inventario_refaccion($codigo, $ot_num = 'OT-BAJA') {
     try {
         require 'databaseS.php';
         inventario_asegurar_sistema($db);
         $codigo = trim((string)$codigo);
+        $ot_num = trim((string)$ot_num) !== '' ? trim((string)$ot_num) : 'OT-BAJA';
         if ($codigo === '') return false;
 
         $fecha = date('Y-m-d');
-        $stmt = mysqli_prepare($db, "UPDATE Inventario SET OT_Num = 'OT-BAJA', Fecha_Salida = ? WHERE Codigo = ? AND OT_Num = 'OT-SYSTEM'");
+        $stmt = mysqli_prepare($db, "UPDATE Inventario SET OT_Num = ?, Fecha_Salida = ? WHERE Codigo = ? AND OT_Num = 'OT-SYSTEM'");
         if (!$stmt) return false;
-        mysqli_stmt_bind_param($stmt, 'ss', $fecha, $codigo);
+        mysqli_stmt_bind_param($stmt, 'sss', $ot_num, $fecha, $codigo);
         $ok = mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         return $ok;
@@ -196,13 +197,31 @@ function obtener_movimientos_inventario($tipo = null) {
                     FROM Inventario WHERE OT_Num = 'OT-SYSTEM' ORDER BY Fecha_Salida DESC, Codigo DESC";
             return mysqli_query($db, $sql);
         } elseif ($tipo === 'salida') {
-            $sql = "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad, 'Baja de stock' as nota, Fecha_Salida as registrado_en 
-                    FROM Inventario WHERE OT_Num = 'OT-BAJA' ORDER BY Fecha_Salida DESC, Codigo DESC";
+            $sql = "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad, 
+                           IF(OT_Num = 'OT-BAJA', 'Baja de stock', CONCAT('Uso en ', OT_Num)) as nota, 
+                           Fecha_Salida as registrado_en 
+                    FROM Inventario WHERE OT_Num != 'OT-SYSTEM' ORDER BY Fecha_Salida DESC, Codigo DESC";
             return mysqli_query($db, $sql);
         }
         
-        $sql = "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad, 'Movimiento' as nota, Fecha_Salida as registrado_en 
-                FROM Inventario WHERE OT_Num IN ('OT-SYSTEM', 'OT-BAJA') ORDER BY Fecha_Salida DESC, Codigo DESC";
+        $sql = "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad, 
+                       IF(OT_Num = 'OT-SYSTEM', 'Alta de stock', IF(OT_Num = 'OT-BAJA', 'Baja de stock', CONCAT('Uso en ', OT_Num))) as nota, 
+                       Fecha_Salida as registrado_en 
+                FROM Inventario ORDER BY Fecha_Salida DESC, Codigo DESC";
+        return mysqli_query($db, $sql);
+    } catch (\Throwable $th) {
+        var_dump($th);
+        return false;
+    }
+}
+
+function obtener_refacciones_disponibles() {
+    try {
+        require 'databaseS.php';
+        $sql = "SELECT Codigo as codigo, Pieza as nombre, Cantidad as cantidad, Tipo as unidad 
+                FROM Inventario 
+                WHERE OT_Num = 'OT-SYSTEM' AND Cantidad > 0 
+                ORDER BY Pieza ASC";
         return mysqli_query($db, $sql);
     } catch (\Throwable $th) {
         var_dump($th);

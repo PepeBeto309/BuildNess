@@ -73,36 +73,71 @@ $iva = $total_cobrado - $subtotal;
 // Fecha actual
 $fecha = date('Y-m-d');
 
-// 3. Insertar la OT
-$stmt_ot = mysqli_prepare($db, "INSERT INTO OT (
-    OT_Num, Fecha, Clave_Cliente, Clave_Vehiculo, MecanicoID,
-    Trabajo_Realizado, Horas_Facturadas, Costo_MO_Hr, Costo_MO, Refacciones,
-    Total_Sugerido, Total_Cobrado, Utilidad, Estado, Odometer_In,
-    Subtotal, Iva, WebRowID
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+// Obtener acción (nueva o editar)
+$action = trim($_POST['action'] ?? 'nueva_ot');
 
-if ($stmt_ot) {
-    $web_row_id = 'WEB-' . uniqid();
-    mysqli_stmt_bind_param(
-        $stmt_ot,
-        'ssssssdddddddsidds',
-        $ot_num, $fecha, $clave_cliente, $clave_vehiculo, $mecanico_id,
-        $descripcion, $horas_mano_obra, $costo_hora, $costo_mo, $total_refacciones,
-        $total_sugerido, $total_cobrado, $utilidad, $estado, $km_entrada,
-        $subtotal, $iva, $web_row_id
-    );
+// 3. Guardar o Actualizar la OT
+if ($action === 'editar_ot') {
+    $stmt_ot = mysqli_prepare($db, "UPDATE OT SET
+        MecanicoID = ?, Trabajo_Realizado = ?, Horas_Facturadas = ?, Costo_MO_Hr = ?,
+        Costo_MO = ?, Refacciones = ?, Total_Sugerido = ?, Total_Cobrado = ?,
+        Utilidad = ?, Estado = ?, Odometer_In = ?, Subtotal = ?, Iva = ?
+        WHERE OT_Num = ?");
 
-    if (mysqli_stmt_execute($stmt_ot)) {
-        mysqli_stmt_close($stmt_ot);
-        header('Location: ../historial.php?success=ot_guardada');
-        exit;
+    if ($stmt_ot) {
+        mysqli_stmt_bind_param(
+            $stmt_ot,
+            'ssdddddddsidds',
+            $mecanico_id, $descripcion, $horas_mano_obra, $costo_hora,
+            $costo_mo, $total_refacciones, $total_sugerido, $total_cobrado,
+            $utilidad, $estado, $km_entrada, $subtotal, $iva, $ot_num
+        );
+
+        if (mysqli_stmt_execute($stmt_ot)) {
+            mysqli_stmt_close($stmt_ot);
+            header('Location: ../historial.php?success=ot_guardada');
+            exit;
+        } else {
+            $error = mysqli_stmt_error($stmt_ot);
+            mysqli_stmt_close($stmt_ot);
+            header('Location: ../nueva_orden.php?error=db_error&detail=' . urlencode($error));
+            exit;
+        }
     } else {
-        $error = mysqli_stmt_error($stmt_ot);
-        mysqli_stmt_close($stmt_ot);
-        header('Location: ../nueva_orden.php?error=db_error&detail=' . urlencode($error));
+        header('Location: ../nueva_orden.php?error=prepare_error');
         exit;
     }
 } else {
-    header('Location: ../nueva_orden.php?error=prepare_error');
-    exit;
+    $stmt_ot = mysqli_prepare($db, "INSERT INTO OT (
+        OT_Num, Fecha, Clave_Cliente, Clave_Vehiculo, MecanicoID,
+        Trabajo_Realizado, Horas_Facturadas, Costo_MO_Hr, Costo_MO, Refacciones,
+        Total_Sugerido, Total_Cobrado, Utilidad, Estado, Odometer_In,
+        Subtotal, Iva, WebRowID
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    if ($stmt_ot) {
+        $web_row_id = 'WEB-' . uniqid();
+        mysqli_stmt_bind_param(
+            $stmt_ot,
+            'ssssssdddddddsidds',
+            $ot_num, $fecha, $clave_cliente, $clave_vehiculo, $mecanico_id,
+            $descripcion, $horas_mano_obra, $costo_hora, $costo_mo, $total_refacciones,
+            $total_sugerido, $total_cobrado, $utilidad, $estado, $km_entrada,
+            $subtotal, $iva, $web_row_id
+        );
+
+        if (mysqli_stmt_execute($stmt_ot)) {
+            mysqli_stmt_close($stmt_ot);
+            header('Location: ../historial.php?success=ot_guardada');
+            exit;
+        } else {
+            $error = mysqli_stmt_error($stmt_ot);
+            mysqli_stmt_close($stmt_ot);
+            header('Location: ../nueva_orden.php?error=db_error&detail=' . urlencode($error));
+            exit;
+        }
+    } else {
+        header('Location: ../nueva_orden.php?error=prepare_error');
+        exit;
+    }
 }
