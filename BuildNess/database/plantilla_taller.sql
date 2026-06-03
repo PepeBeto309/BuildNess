@@ -3,6 +3,7 @@
 -- =============================================
 SET NAMES utf8mb4;
 SET CHARACTER SET utf8mb4;
+USE salvatori;
 
 -- Catálogo de servicios
 CREATE TABLE Catalogo_Servicios (

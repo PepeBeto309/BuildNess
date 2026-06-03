@@ -214,6 +214,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         .ambient-shadow {
             box-shadow: 0 8px 32px rgba(23, 28, 31, 0.06);
         }
+        
+        /* Slider styling */
+        .pricing-slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 24px 0;
+        }
+        .pricing-slider-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform;
+        }
+        .pricing-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            padding: 0 12px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        /* Custom Dot Animations */
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            background-color: #cbd5e1;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .dark .slider-dot {
+            background-color: #475569;
+        }
+        .slider-dot.active {
+            width: 24px;
+            background-color: #00328a;
+        }
+        .dark .slider-dot.active {
+            background-color: #3b82f6;
+        }
     </style>
 </head>
 <body class="bg-background text-on-surface font-body antialiased">
@@ -364,87 +404,115 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 <h2 class="font-headline text-3xl md:text-4xl font-bold text-primary mb-4">Inversión clara, sin sorpresas</h2>
                 <p class="font-body text-secondary max-w-2xl mx-auto">Planes diseñados para adaptarse a la etapa de tu negocio.</p>
             </div>
-            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                <!-- Suscripción -->
-                <div class="bg-surface-container-lowest p-8 rounded-xl ambient-shadow border border-outline-variant/20 flex flex-col">
-                    <h3 class="font-headline text-xl font-bold text-secondary mb-2">Suscripción</h3>
-                    <div class="mb-6">
-                        <span class="font-headline text-4xl font-extrabold text-on-surface">Desde $299</span>
-                        <span class="font-body text-secondary">/mes</span>
+            <!-- Slider Wrapper -->
+            <div class="relative max-w-6xl mx-auto px-4">
+                <!-- Slider Container -->
+                <div class="pricing-slider-container">
+                    <!-- Slider Track -->
+                    <div id="pricing-slider-track" class="pricing-slider-track select-none" style="cursor: grab;">
+                        
+                        <!-- Slide 1: Suscripción -->
+                        <div class="pricing-slide flex flex-col">
+                            <div class="w-full max-w-md mx-auto bg-surface-container-lowest p-8 rounded-xl ambient-shadow border border-outline-variant/20 flex flex-col h-full hover:scale-[1.02] hover:shadow-lg transition-all duration-300">
+                                <h3 class="font-headline text-xl font-bold text-secondary mb-2">Suscripción</h3>
+                                <div class="mb-6">
+                                    <span class="font-headline text-4xl font-extrabold text-on-surface">Desde $299</span>
+                                    <span class="font-body text-secondary">/mes</span>
+                                </div>
+                                <p class="font-body text-sm text-secondary mb-8">Paga mensual o anualmente (¡2 meses gratis en plan anual!).</p>
+                                <ul class="space-y-4 mb-8 flex-1">
+                                    <li class="flex items-center gap-3 font-body text-sm">
+                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
+                                        ERP Solo: $299/mes
+                                    </li>
+                                    <li class="flex items-center gap-3 font-body text-sm">
+                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
+                                        ERP + CRM: $499/mes
+                                    </li>
+                                    <li class="flex items-center gap-3 font-body text-sm">
+                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
+                                        Soporte 24/7 en español
+                                    </li>
+                                </ul>
+                                <button class="w-full py-3 rounded-md font-label font-semibold text-primary border border-primary hover:bg-primary-fixed transition-colors btn-pricing-trigger">
+                                    Elegir Plan
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Licencia Vitalicia -->
+                        <div class="pricing-slide flex flex-col">
+                            <div class="w-full max-w-md mx-auto bg-primary p-8 rounded-xl ambient-shadow relative overflow-hidden flex flex-col text-on-primary h-full hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 shadow-xl z-10">
+                                <div class="absolute top-0 right-0 bg-tertiary text-on-tertiary text-xs font-bold px-3 py-1 rounded-bl-lg">
+                                    MÁS POPULAR
+                                </div>
+                                <h3 class="font-headline text-xl font-bold text-primary-fixed mb-2">Licencia Vitalicia</h3>
+                                <div class="mb-6">
+                                    <span class="font-headline text-4xl font-extrabold text-on-primary">Pago Único</span>
+                                </div>
+                                <p class="font-body text-sm text-primary-fixed mb-8">Para negocios establecidos que buscan control total sin pagos mensuales.</p>
+                                <ul class="space-y-4 mb-8 flex-1">
+                                    <li class="flex items-center gap-3 font-body text-sm">
+                                        <span class="material-symbols-outlined text-tertiary-fixed text-sm">check</span>
+                                        ERP Solo: $4,999
+                                    </li>
+                                    <li class="flex items-center gap-3 font-body text-sm">
+                                        <span class="material-symbols-outlined text-tertiary-fixed text-sm">check</span>
+                                        ERP + CRM: $7,999
+                                    </li>
+                                    <li class="flex items-center gap-3 font-body text-sm">
+                                        <span class="material-symbols-outlined text-tertiary-fixed text-sm">check</span>
+                                        Usuarios y citas ilimitadas
+                                    </li>
+                                </ul>
+                                <button class="w-full py-3 rounded-md font-label font-semibold text-on-tertiary btn-tertiary btn-pricing-trigger">
+                                    Comprar Licencia
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: Add-on IA -->
+                        <div class="pricing-slide flex flex-col">
+                            <div class="w-full max-w-md mx-auto bg-surface-container-lowest p-8 rounded-xl ambient-shadow border border-outline-variant/20 flex flex-col h-full hover:scale-[1.02] hover:shadow-lg transition-all duration-300">
+                                <h3 class="font-headline text-xl font-bold text-secondary mb-2">Add-on IA</h3>
+                                <div class="mb-6">
+                                    <span class="font-headline text-4xl font-extrabold text-on-surface">$199</span>
+                                    <span class="font-body text-secondary">/mes</span>
+                                </div>
+                                <p class="font-body text-sm text-secondary mb-8">Módulo IA Potenciado, disponible para cualquier plan.</p>
+                                <ul class="space-y-4 mb-8 flex-1">
+                                    <li class="flex items-center gap-3 font-body text-sm">
+                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
+                                        Análisis predictivo de demanda
+                                    </li>
+                                    <li class="flex items-center gap-3 font-body text-sm">
+                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
+                                        Automatización de WhatsApp
+                                    </li>
+                                    <li class="flex items-center gap-3 font-body text-sm">
+                                        <span class="material-symbols-outlined text-tertiary text-sm">check</span>
+                                        Insights de negocio en tiempo real
+                                    </li>
+                                </ul>
+                                <button class="w-full py-3 rounded-md font-label font-semibold text-primary border border-primary hover:bg-primary-fixed transition-colors btn-pricing-trigger">
+                                    Añadir Módulo
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
-                    <p class="font-body text-sm text-secondary mb-8">Paga mensual o anualmente (¡2 meses gratis en plan anual!).</p>
-                    <ul class="space-y-4 mb-8 flex-1">
-                        <li class="flex items-center gap-3 font-body text-sm">
-                            <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                            ERP Solo: $299/mes
-                        </li>
-                        <li class="flex items-center gap-3 font-body text-sm">
-                            <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                            ERP + CRM: $499/mes
-                        </li>
-                        <li class="flex items-center gap-3 font-body text-sm">
-                            <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                            Soporte 24/7 en español
-                        </li>
-                    </ul>
-                    <button class="w-full py-3 rounded-md font-label font-semibold text-primary border border-primary hover:bg-primary-fixed transition-colors btn-pricing-trigger">
-                        Elegir Plan
-                    </button>
                 </div>
-                <!-- Licencia Vitalicia -->
-                <div class="bg-primary p-8 rounded-xl ambient-shadow relative overflow-hidden flex flex-col text-on-primary transform md:-translate-y-4 shadow-xl z-10">
-                    <div class="absolute top-0 right-0 bg-tertiary text-on-tertiary text-xs font-bold px-3 py-1 rounded-bl-lg">
-                        MÁS POPULAR
-                    </div>
-                    <h3 class="font-headline text-xl font-bold text-primary-fixed mb-2">Licencia Vitalicia</h3>
-                    <div class="mb-6">
-                        <span class="font-headline text-4xl font-extrabold text-on-primary">Pago Único</span>
-                    </div>
-                    <p class="font-body text-sm text-primary-fixed mb-8">Para negocios establecidos que buscan control total sin pagos mensuales.</p>
-                    <ul class="space-y-4 mb-8 flex-1">
-                        <li class="flex items-center gap-3 font-body text-sm">
-                            <span class="material-symbols-outlined text-tertiary-fixed text-sm">check</span>
-                            ERP Solo: $4,999
-                        </li>
-                        <li class="flex items-center gap-3 font-body text-sm">
-                            <span class="material-symbols-outlined text-tertiary-fixed text-sm">check</span>
-                            ERP + CRM: $7,999
-                        </li>
-                        <li class="flex items-center gap-3 font-body text-sm">
-                            <span class="material-symbols-outlined text-tertiary-fixed text-sm">check</span>
-                            Usuarios y citas ilimitadas
-                        </li>
-                    </ul>
-                    <button class="w-full py-3 rounded-md font-label font-semibold text-on-tertiary btn-tertiary btn-pricing-trigger">
-                        Comprar Licencia
-                    </button>
-                </div>
-                <!-- Add-on IA -->
-                <div class="bg-surface-container-lowest p-8 rounded-xl ambient-shadow border border-outline-variant/20 flex flex-col">
-                    <h3 class="font-headline text-xl font-bold text-secondary mb-2">Add-on IA</h3>
-                    <div class="mb-6">
-                        <span class="font-headline text-4xl font-extrabold text-on-surface">$199</span>
-                        <span class="font-body text-secondary">/mes</span>
-                    </div>
-                    <p class="font-body text-sm text-secondary mb-8">Módulo IA Potenciado, disponible para cualquier plan.</p>
-                    <ul class="space-y-4 mb-8 flex-1">
-                        <li class="flex items-center gap-3 font-body text-sm">
-                            <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                            Análisis predictivo de demanda
-                        </li>
-                        <li class="flex items-center gap-3 font-body text-sm">
-                            <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                            Automatización de WhatsApp
-                        </li>
-                        <li class="flex items-center gap-3 font-body text-sm">
-                            <span class="material-symbols-outlined text-tertiary text-sm">check</span>
-                            Insights de negocio en tiempo real
-                        </li>
-                    </ul>
-                    <button class="w-full py-3 rounded-md font-label font-semibold text-primary border border-primary hover:bg-primary-fixed transition-colors btn-pricing-trigger">
-                        Añadir Módulo
-                    </button>
-                </div>
+
+                <!-- Navigation Arrows -->
+                <button id="slider-prev" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20 focus:outline-none hover:bg-slate-50 dark:hover:bg-slate-800" aria-label="Anterior">
+                    <span class="material-symbols-outlined font-bold text-2xl">chevron_left</span>
+                </button>
+                <button id="slider-next" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20 focus:outline-none hover:bg-slate-50 dark:hover:bg-slate-800" aria-label="Siguiente">
+                    <span class="material-symbols-outlined font-bold text-2xl">chevron_right</span>
+                </button>
+
+                <!-- Indicator Dots -->
+                <div id="slider-dots" class="flex justify-center items-center gap-3 mt-6"></div>
             </div>
         </div>
     </section>
@@ -639,6 +707,214 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     showLogin();
                 <?php endif; ?>
             <?php endif; ?>
+
+            // ==========================================
+            // PRICING SLIDER LOGIC
+            // ==========================================
+            const sliderTrack = document.getElementById('pricing-slider-track');
+            const slides = document.querySelectorAll('.pricing-slide');
+            const btnPrev = document.getElementById('slider-prev');
+            const btnNext = document.getElementById('slider-next');
+            const dotsContainer = document.getElementById('slider-dots');
+            
+            let currentSlide = 0;
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+            
+            function getSlidesToShow() {
+                return 1;
+            }
+            
+            function updateSlider() {
+                if (!sliderTrack || slides.length === 0) return;
+                
+                const slidesToShow = getSlidesToShow();
+                const totalSlides = slides.length;
+                const maxIndex = Math.max(0, totalSlides - slidesToShow);
+                
+                if (currentSlide > maxIndex) {
+                    currentSlide = maxIndex;
+                }
+                
+                const slidePercent = 100 / slidesToShow;
+                sliderTrack.style.transform = `translateX(-${currentSlide * slidePercent}%)`;
+                
+                if (maxIndex === 0) {
+                    if (btnPrev) btnPrev.style.display = 'none';
+                    if (btnNext) btnNext.style.display = 'none';
+                    if (dotsContainer) dotsContainer.style.display = 'none';
+                } else {
+                    if (btnPrev) {
+                        btnPrev.style.display = 'flex';
+                        btnPrev.disabled = (currentSlide === 0);
+                        btnPrev.style.opacity = (currentSlide === 0) ? '0.4' : '1';
+                        btnPrev.style.cursor = (currentSlide === 0) ? 'not-allowed' : 'pointer';
+                    }
+                    if (btnNext) {
+                        btnNext.style.display = 'flex';
+                        btnNext.disabled = (currentSlide === maxIndex);
+                        btnNext.style.opacity = (currentSlide === maxIndex) ? '0.4' : '1';
+                        btnNext.style.cursor = (currentSlide === maxIndex) ? 'not-allowed' : 'pointer';
+                    }
+                    if (dotsContainer) {
+                        dotsContainer.style.display = 'flex';
+                        const dots = dotsContainer.querySelectorAll('.slider-dot');
+                        dots.forEach((dot, idx) => {
+                            if (idx === currentSlide) {
+                                dot.classList.add('active');
+                            } else {
+                                dot.classList.remove('active');
+                            }
+                            dot.style.display = (idx > maxIndex) ? 'none' : 'inline-block';
+                        });
+                    }
+                }
+            }
+            
+            function buildDots() {
+                if (!dotsContainer) return;
+                dotsContainer.innerHTML = '';
+                const slidesToShow = getSlidesToShow();
+                const totalSlides = slides.length;
+                const maxIndex = Math.max(0, totalSlides - slidesToShow);
+                
+                for (let i = 0; i <= maxIndex; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'slider-dot focus:outline-none';
+                    if (i === currentSlide) dot.classList.add('active');
+                    dot.setAttribute('aria-label', `Ir al plan ${i + 1}`);
+                    dot.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentSlide = i;
+                        updateSlider();
+                    });
+                    dotsContainer.appendChild(dot);
+                }
+            }
+            
+            if (sliderTrack && slides.length > 0) {
+                if (btnPrev) {
+                    btnPrev.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (currentSlide > 0) {
+                            currentSlide--;
+                            updateSlider();
+                        }
+                    });
+                }
+                
+                if (btnNext) {
+                    btnNext.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const slidesToShow = getSlidesToShow();
+                        const maxIndex = slides.length - slidesToShow;
+                        if (currentSlide < maxIndex) {
+                            currentSlide++;
+                            updateSlider();
+                        }
+                    });
+                }
+                
+                // Swipe Support (Touch Events)
+                sliderTrack.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    currentX = startX;
+                    isDragging = true;
+                    sliderTrack.style.transition = 'none';
+                }, { passive: true });
+                
+                sliderTrack.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    currentX = e.touches[0].clientX;
+                    const diffX = currentX - startX;
+                    
+                    const slidesToShow = getSlidesToShow();
+                    const slidePercent = 100 / slidesToShow;
+                    const containerWidth = sliderTrack.parentElement.clientWidth;
+                    const currentOffsetPercent = -(currentSlide * slidePercent);
+                    const dragPercent = (diffX / containerWidth) * 100;
+                    
+                    sliderTrack.style.transform = `translateX(${currentOffsetPercent + dragPercent}%)`;
+                }, { passive: true });
+                
+                sliderTrack.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    sliderTrack.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                    
+                    const diffX = currentX - startX;
+                    const threshold = 50;
+                    
+                    const slidesToShow = getSlidesToShow();
+                    const maxIndex = slides.length - slidesToShow;
+                    
+                    if (Math.abs(diffX) > threshold) {
+                        if (diffX > 0 && currentSlide > 0) {
+                            currentSlide--;
+                        } else if (diffX < 0 && currentSlide < maxIndex) {
+                            currentSlide++;
+                        }
+                    }
+                    updateSlider();
+                });
+                
+                // Drag Support (Mouse Events)
+                sliderTrack.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    startX = e.clientX;
+                    currentX = startX;
+                    isDragging = true;
+                    sliderTrack.style.transition = 'none';
+                    sliderTrack.style.cursor = 'grabbing';
+                });
+                
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    currentX = e.clientX;
+                    const diffX = currentX - startX;
+                    
+                    const slidesToShow = getSlidesToShow();
+                    const slidePercent = 100 / slidesToShow;
+                    const containerWidth = sliderTrack.parentElement.clientWidth;
+                    const currentOffsetPercent = -(currentSlide * slidePercent);
+                    const dragPercent = (diffX / containerWidth) * 100;
+                    
+                    sliderTrack.style.transform = `translateX(${currentOffsetPercent + dragPercent}%)`;
+                });
+                
+                window.addEventListener('mouseup', () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    sliderTrack.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                    sliderTrack.style.cursor = 'grab';
+                    
+                    const diffX = currentX - startX;
+                    const threshold = 50;
+                    
+                    const slidesToShow = getSlidesToShow();
+                    const maxIndex = slides.length - slidesToShow;
+                    
+                    if (Math.abs(diffX) > threshold) {
+                        if (diffX > 0 && currentSlide > 0) {
+                            currentSlide--;
+                        } else if (diffX < 0 && currentSlide < maxIndex) {
+                            currentSlide++;
+                        }
+                    }
+                    updateSlider();
+                });
+                
+                // Window Resize
+                window.addEventListener('resize', () => {
+                    buildDots();
+                    updateSlider();
+                });
+                
+                // Initialize
+                buildDots();
+                updateSlider();
+            }
         });
     </script>
 </body>

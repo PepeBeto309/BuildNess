@@ -1,17 +1,58 @@
 <?php
 /**
- * Script de inicialización - ELIMINAR después de uso.
- * Acceder desde el navegador: http://localhost:8080/init_db.php
- * Crea la tabla Usuarios si no existe y resetea/inserta el admin por defecto.
+ * Script de inicialización - BuildNess
+ * ELIMINAR después de usarlo por seguridad.
+ * Acceder: http://localhost:8080/init_db.php
  */
 require_once __DIR__ . '/php/databaseS.php';
 
 header('Content-Type: text/html; charset=utf-8');
-echo '<style>body{font-family:monospace;padding:2em;background:#111;color:#0f0;} a{color:cyan;} .ok{color:lime;} .err{color:red;} .warn{color:yellow;}</style>';
-echo '<h2 style="color:#fff">🛠️ Inicialización de Usuarios - BuildNess</h2>';
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Init DB - BuildNess</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 2rem; }
+    h1 { color: #60a5fa; margin-bottom: 1.5rem; font-size: 1.5rem; }
+    h2 { color: #94a3b8; font-size: 1rem; margin: 1.5rem 0 0.5rem; }
+    .card { background: #1e293b; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1rem; }
+    .ok   { color: #4ade80; }
+    .err  { color: #f87171; }
+    .warn { color: #facc15; }
+    .info { color: #60a5fa; }
+    pre { background: #0f172a; padding: 1rem; border-radius: 0.5rem; font-size: 0.8rem; white-space: pre-wrap; word-break: break-all; }
+    .btn { display: inline-block; margin-top: 1.5rem; padding: 0.75rem 2rem; background: #2563eb; color: #fff; 
+           border-radius: 0.5rem; text-decoration: none; font-weight: 600; transition: background 0.2s; }
+    .btn:hover { background: #1d4ed8; }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 700; }
+    .badge-ok { background: #14532d; color: #4ade80; }
+    .badge-err { background: #7f1d1d; color: #f87171; }
+    hr { border-color: #334155; margin: 1.5rem 0; }
+</style>
+</head>
+<body>
+<h1>🛠️ BuildNess — Inicialización de Base de Datos</h1>
 
+<?php
+$log = [];
+
+function exec_sql($db, string $sql, string $desc): void {
+    global $log;
+    if (mysqli_query($db, $sql)) {
+        $log[] = ['ok', "✅ $desc"];
+    } else {
+        $log[] = ['err', "❌ $desc — " . mysqli_error($db)];
+    }
+}
+
+// ─────────────────────────────────────────────
 // 1. Crear tabla Usuarios si no existe
-$sql_crear = "CREATE TABLE IF NOT EXISTS Usuarios (
+// ─────────────────────────────────────────────
+exec_sql($db, "
+CREATE TABLE IF NOT EXISTS Usuarios (
   id_usuario    INT           NOT NULL AUTO_INCREMENT,
   nombre        VARCHAR(100)  NOT NULL,
   email         VARCHAR(100)  NOT NULL,
@@ -22,56 +63,80 @@ $sql_crear = "CREATE TABLE IF NOT EXISTS Usuarios (
   fecha_baja    DATETIME      NULL,
   PRIMARY KEY (id_usuario),
   UNIQUE KEY uq_email (email)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+", "Tabla Usuarios creada/verificada");
 
-if (mysqli_query($db, $sql_crear)) {
-    echo '<p class="ok">✅ Tabla Usuarios verificada/creada correctamente.</p>';
-} else {
-    echo '<p class="err">❌ Error al crear tabla: ' . mysqli_error($db) . '</p>';
-    exit;
-}
-
-// 2. Verificar si ya existe el administrador
-$res = mysqli_query($db, "SELECT * FROM Usuarios WHERE email = 'admin@taller.com' LIMIT 1");
-$admin = mysqli_fetch_assoc($res);
+// ─────────────────────────────────────────────
+// 2. Insertar o actualizar admin por defecto
+// ─────────────────────────────────────────────
+$res  = mysqli_query($db, "SELECT * FROM Usuarios WHERE email = 'admin@taller.com' LIMIT 1");
+$admin = $res ? mysqli_fetch_assoc($res) : null;
 
 if ($admin) {
-    // Ya existe: actualizar la contraseña a Admin2025* en texto plano
-    $stmt = mysqli_prepare($db, "UPDATE Usuarios SET password = ?, activo = 1 WHERE email = 'admin@taller.com'");
-    $pass = 'Admin2025*';
-    mysqli_stmt_bind_param($stmt, 's', $pass);
+    // Actualizar password a texto plano Admin2025*
+    $stmt = mysqli_prepare($db, "UPDATE Usuarios SET password = 'Admin2025*', activo = 1, rol = 'administrador' WHERE email = 'admin@taller.com'");
     if (mysqli_stmt_execute($stmt)) {
-        echo '<p class="warn">⚠️ Ya existía el administrador. Contraseña reseteada a <strong>Admin2025*</strong> (texto plano).</p>';
+        $log[] = ['warn', "⚠️ Admin ya existía — contraseña reseteada a <strong>Admin2025*</strong>"];
     } else {
-        echo '<p class="err">❌ Error al actualizar contraseña: ' . mysqli_error($db) . '</p>';
+        $log[] = ['err', "❌ No se pudo resetear contraseña: " . mysqli_error($db)];
     }
     mysqli_stmt_close($stmt);
 } else {
-    // No existe: insertar
     $stmt = mysqli_prepare($db, "INSERT INTO Usuarios (nombre, email, password, rol, activo) VALUES ('Administrador', 'admin@taller.com', 'Admin2025*', 'administrador', 1)");
     if (mysqli_stmt_execute($stmt)) {
-        echo '<p class="ok">✅ Administrador insertado con email: <strong>admin@taller.com</strong> y contraseña: <strong>Admin2025*</strong></p>';
+        $log[] = ['ok', "✅ Administrador insertado correctamente"];
     } else {
-        echo '<p class="err">❌ Error al insertar admin: ' . mysqli_error($db) . '</p>';
+        $log[] = ['err', "❌ Error insertando admin: " . mysqli_error($db)];
     }
     mysqli_stmt_close($stmt);
 }
 
-// 3. Verificación final
-echo '<h3 style="color:#ff0">Verificación final:</h3><pre>';
-$res = mysqli_query($db, "SELECT * FROM Usuarios WHERE email = 'admin@taller.com' LIMIT 1");
-$row = mysqli_fetch_assoc($res);
-if ($row) {
-    echo "Email:    " . $row['email'] . "\n";
-    echo "Nombre:   " . $row['nombre'] . "\n";
-    echo "Password: " . $row['password'] . "\n";
-    echo "Rol:      " . $row['rol'] . "\n";
-    echo "Activo:   " . ($row['activo'] ? 'Sí' : 'No') . "\n";
+// ─────────────────────────────────────────────
+// 3. Mostrar resultados
+// ─────────────────────────────────────────────
+echo '<div class="card">';
+echo '<h2>📋 Resultados</h2><br>';
+foreach ($log as [$type, $msg]) {
+    $cls = $type === 'ok' ? 'ok' : ($type === 'err' ? 'err' : 'warn');
+    echo "<p class='$cls' style='margin:0.4rem 0;'>$msg</p>";
 }
-echo '</pre>';
+echo '</div>';
 
-echo '<p class="ok">✅ ¡Listo! Ya puedes iniciar sesión.</p>';
-echo '<p><strong>Email:</strong> admin@taller.com<br><strong>Contraseña:</strong> Admin2025*</p>';
-echo '<br><a href="index.php">👉 Ir a la página principal para iniciar sesión</a>';
-echo '<br><br><p class="warn">⚠️ <strong>IMPORTANTE:</strong> Elimina este archivo (init_db.php) después de usarlo por seguridad.</p>';
+// ─────────────────────────────────────────────
+// 4. Verificación final del usuario admin
+// ─────────────────────────────────────────────
+$res  = mysqli_query($db, "SELECT * FROM Usuarios WHERE email = 'admin@taller.com' LIMIT 1");
+$row  = $res ? mysqli_fetch_assoc($res) : null;
+
+echo '<div class="card">';
+echo '<h2>👤 Estado del Administrador</h2><br>';
+if ($row) {
+    $pass_ok = ($row['password'] === 'Admin2025*') || password_verify('Admin2025*', $row['password']);
+    $id_col  = $row['id_usuario'] ?? $row['id'] ?? '?';
+    echo "<p>ID: <span class='info'>$id_col</span></p>";
+    echo "<p>Email: <span class='info'>" . htmlspecialchars($row['email']) . "</span></p>";
+    echo "<p>Nombre: <span class='info'>" . htmlspecialchars($row['nombre']) . "</span></p>";
+    echo "<p>Rol: <span class='info'>" . htmlspecialchars($row['rol']) . "</span></p>";
+    echo "<p>Activo: <span class='" . ($row['activo'] ? 'ok' : 'err') . "'>" . ($row['activo'] ? 'Sí ✅' : 'No ❌') . "</span></p>";
+    echo "<p>Contraseña Admin2025*: <span class='" . ($pass_ok ? 'ok' : 'err') . "'>" . ($pass_ok ? 'Válida ✅' : 'NO coincide ❌') . "</span></p>";
+} else {
+    echo "<p class='err'>❌ No se encontró el administrador. Revisa los errores arriba.</p>";
+}
+echo '</div>';
+
+echo '<div class="card">';
+echo '<h2>🔑 Credenciales de Acceso</h2><br>';
+echo '<pre>Email:      admin@taller.com
+Contraseña: Admin2025*
+URL:        http://localhost:8080/index.php</pre>';
+echo '</div>';
+
+echo '<div class="card" style="background:#7f1d1d20;border:1px solid #7f1d1d;">';
+echo '<p class="err">⚠️ <strong>SEGURIDAD:</strong> Elimina este archivo (<code>init_db.php</code>) y <code>debug_usuarios.php</code> después de usarlos.</p>';
+echo '</div>';
 ?>
+
+<a href="index.php" class="btn">→ Ir a la página principal</a>
+
+</body>
+</html>
